@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router-dom';
 import './main.css'
 import { HiOutlineClipboardCheck, HiOutlineLocationMarker } from 'react-icons/hi'
 import img from '../../Assets/img.jpg'
@@ -138,7 +139,8 @@ const Main = () => {
                 </div>
 
                 <button className="btn flex">
-                  DETAILS <HiOutlineClipboardCheck className="icon" />
+                <Link to="/booking-details">BOOK NOW</Link>
+                <HiOutlineClipboardCheck className="icon" />
                 </button>
 
               </div>
