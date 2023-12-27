@@ -8,7 +8,6 @@ const PaymentPage = () => {
 
   const handlePayment = (method) => {
     // Handle payment based on the selected method
-    // You can implement the payment processing logic here
     console.log(`Payment via ${method}`);
     // For demonstration purposes, redirect to a success page
     history.push('/payment-success');

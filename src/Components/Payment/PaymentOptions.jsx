@@ -11,8 +11,8 @@ const PaymentOptions = () => {
   const searchParams = new URLSearchParams(location.search);
   const tourIdFromURL = searchParams.get('tour_id');
   const handlePayment = (method) => {
-    // Handle payment based on the selected method
-    // You can implement the payment processing logic here
+    
+   
     console.log(`Payment via ${method}`);
 
     if (method === 'debit card') {
