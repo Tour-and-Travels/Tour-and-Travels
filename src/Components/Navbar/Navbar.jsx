@@ -40,11 +40,6 @@ const Navbar = () => {
                 Home
               </a>
             </li>
-            <li className="navItem">
-              <a href="#" className="navLink">
-                Packages
-              </a>
-            </li>
             <button className="btn" onClick={logoutHandler}>
               Logout
             </button>

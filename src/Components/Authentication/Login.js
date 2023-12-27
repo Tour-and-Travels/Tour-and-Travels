@@ -70,7 +70,7 @@ const Login = () => {
       setTimeout(() => {
         setLoading(false);
         setShouldRefresh(true);
-        history.push("/home");
+        history.push("/");
       }, 1000);
     } catch (error) {
       toast({

@@ -144,7 +144,7 @@ const Signup = () => {
       setTimeout(() => {
         setLoading(false);
         setShouldRefresh(true);
-        history.push("/home");
+        history.push("/");
       }, 1000); // 1000ms delay (1 second) as an example
     } catch (error) {
       toast({

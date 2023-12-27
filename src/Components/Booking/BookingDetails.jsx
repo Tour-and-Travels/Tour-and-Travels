@@ -11,11 +11,16 @@ import {
 } from '@chakra-ui/react';
 import { useHistory } from 'react-router-dom';
 import PaymentPage from '../Payment/PaymentPage';
+import { useLocation } from 'react-router-dom';
 
 const BookingDetails = () => {
   const [isSmallScreen] = useMediaQuery('(max-width: 400px)');
   const history = useHistory();
+  const location = useLocation();
 
+  // Retrieve tour_id from the URL
+  const searchParams = new URLSearchParams(location.search);
+  const tourIdFromURL = searchParams.get('tour_id');
   const [bookingDetails, setBookingDetails] = useState({
     name: '',
     email: '',
@@ -35,32 +40,34 @@ const BookingDetails = () => {
   };
 
   const handleSubmit = () => {
-    // Validate form fields before submission (add your validation logic)
+   
     if (!bookingDetails.name || !bookingDetails.email || !bookingDetails.phone || !bookingDetails.numberOfPeople || !bookingDetails.selectedDate) {
       // Display an error message or handle validation as needed
       alert('Please fill in all the required fields.');
       return;
     }
 
-    // Assuming a successful submission, you can proceed with further actions
+    
+  
     console.log('Booking Details submitted:', bookingDetails);
     
 
-    // Clear the form fields after submission
+
     setBookingDetails({
       name: '',
       email: '',
       phone: '',
       numberOfPeople: '',
       selectedDate: '',
-      // Reset other fields as needed
+      
     });
 
     setBookingCompleted(true);
 
-    history.push('/payment-options');
-    // Add additional logic (e.g., redirect to a confirmation page, make an API request, etc.)
-    // After handling submission, navigate to the payment page
+    // history.push('/payment-options');
+    history.push(`/payment-options?tour_id=${tourIdFromURL}`);
+
+    
   };
 
   return (

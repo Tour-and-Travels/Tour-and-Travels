@@ -14,11 +14,15 @@ import {
   AlertDialogOverlay,
 } from '@chakra-ui/react';
 import { useHistory } from 'react-router-dom';
+import { useLocation } from 'react-router-dom/cjs/react-router-dom.min';
 
 const CreditCardPayment = () => {
   const [isSmallScreen] = useMediaQuery('(max-width: 400px)');
   const history = useHistory();
+ const location = useLocation();
 
+  const searchParams = new URLSearchParams(location.search);
+  const tourIdFromURL = searchParams.get('tour_id');
   const [creditCardDetails, setCreditCardDetails] = useState({
     cardNumber: '',
     expiryDate: '',
@@ -58,10 +62,26 @@ const CreditCardPayment = () => {
     console.log('Proceeding to pay via Credit Card with details:', creditCardDetails);
 
     // For demonstration purposes, show a success notification
+    
     setIsOpen(true);
+            fetch("/booking", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ user_id: JSON.parse(localStorage.getItem("userInfo")).user[0].user_id, tour_id:1 }),
+        })
+        .then((response) => response.json())
+        .then((data) => {
+            console.log(data.message);
+        })
+        .catch((error) => {
+            console.error("Error adding booking:", error);
+        });
     setTimeout(() => {
-        history.push('/payment-success');
+        history.push('/payment-success?tour_id=${tourIdFromURL}');
       }, 1000);
+
   };
 
   return (

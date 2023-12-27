@@ -16,7 +16,8 @@ const LoginPage = () => {
   const history = useHistory();
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("userInfo"));
-    if (user) history.push("/home");
+    console.log(user);
+    if (user) history.push("/");
   }, [history]);
 
   return (

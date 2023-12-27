@@ -15,11 +15,15 @@ import {
   AlertDialogOverlay,
 } from '@chakra-ui/react';
 import { useHistory } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
 const UpiPayment = () => {
     const [isSmallScreen] = useMediaQuery('(max-width: 400px)');
     const history = useHistory();
-  
+   const location = useLocation();
+
+  const searchParams = new URLSearchParams(location.search);
+  const tourIdFromURL = searchParams.get('tour_id');
     const [upiDetails, setUpiDetails] = useState({
       selectedUpiApp: '',
       upiId: '',
@@ -51,7 +55,7 @@ const UpiPayment = () => {
       // For demonstration purposes, redirect to a success page
       setIsOpen(true);
       setTimeout(() => {
-        history.push('/payment-success');
+         history.push('/payment-success?tour_id=${tourIdFromURL}');
       }, 1000);
     };
   

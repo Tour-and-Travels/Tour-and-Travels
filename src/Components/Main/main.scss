@@ -62,7 +62,7 @@ body {
   background: var(--cardBG);
   box-shadow: 0 2px 4px rgba(140, 140, 141, 0.549);
   overflow: hidden;
-  transition: background 0.3s ease, box-shadow 0.3s ease;
+//   transition: background 0.3s ease, box-shadow 0.3s ease;
 
   &:hover {
     background: var(--cardHover);

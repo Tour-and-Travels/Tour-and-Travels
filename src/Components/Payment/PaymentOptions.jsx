@@ -1,21 +1,26 @@
 import React from 'react';
 import { Button, VStack, useMediaQuery } from '@chakra-ui/react';
 import { useHistory } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
 const PaymentOptions = () => {
   const [isSmallScreen] = useMediaQuery('(max-width: 400px)');
   const history = useHistory();
+  const location = useLocation();
+
+  const searchParams = new URLSearchParams(location.search);
+  const tourIdFromURL = searchParams.get('tour_id');
   const handlePayment = (method) => {
     // Handle payment based on the selected method
     // You can implement the payment processing logic here
     console.log(`Payment via ${method}`);
 
     if (method === 'debit card') {
-      history.push('/payment/debit-card');
+      history.push(`/payment/debit-card?tour_id=${tourIdFromURL}`);
     } else if (method === 'credit card') {
-      history.push('/payment/credit-card');
+      history.push(`/payment/credit-card?tour_id=${tourIdFromURL}`);
     } else if (method === 'UPI') {
-      history.push('/payment/upi');
+      history.push(`/payment/upi?tour_id=${tourIdFromURL}`);
     }
   };
 

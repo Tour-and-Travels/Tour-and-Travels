@@ -1,12 +1,16 @@
 // main.jsx
-
-import React, { useEffect, useState } from 'react';
-import './main.css';
-import { HiOutlineClipboardCheck, HiOutlineLocationMarker } from 'react-icons/hi';
+import React, { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom';
+import './main.css'
+import { HiOutlineClipboardCheck, HiOutlineLocationMarker } from 'react-icons/hi'
+import { useLocation } from 'react-router-dom';
 
 const Main = () => {
   const [tourData, setTourData] = useState([]);
+ const location = useLocation();
 
+  const searchParams = new URLSearchParams(location.search);
+  const tourIdFromURL = searchParams.get('tour_id');
   useEffect(() => {
     // Fetch tour data from the backend
     fetch('/tour') // Replace with your backend URL
@@ -34,7 +38,7 @@ const Main = () => {
       <div className="secContent">
         {tourData.map(({ tour_id, image, category, hotel_id, description, Tagline, Price, Duration, Starting_date, Ending_date }) => {
           const imageUrl = `data:image/jpeg;base64,${arrayBufferToBase64(image.data)}`;
-
+          const bookNowLink = `/booking-details?tour_id=${tour_id}`; 
           return (
             <div key={tour_id} className="singleDestination">
               <div className="imageDiv">
@@ -58,7 +62,7 @@ const Main = () => {
                 </div>
 
                 <button className="btn flex">
-                <Link to="/booking-details">BOOK NOW</Link>
+                <Link to={bookNowLink}>BOOK NOW</Link>
                 <HiOutlineClipboardCheck className="icon" />
                 </button>
               </div>
