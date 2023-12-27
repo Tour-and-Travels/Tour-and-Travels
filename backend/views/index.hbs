@@ -71,6 +71,21 @@
                         <input type="text" id="tourDescription" class="form-control" placeholder="Description" required>
                     </div>
                     <div class="col-md-2 mb-3 mt-4">
+                        <input type="number" id="tourPrice" class="form-control" placeholder="Price" required>
+                    </div>
+                    <div class="col-md-4 mb-3 mt-4">
+                        <input type="text" id="tourTagline" class="form-control" placeholder="Tagline" required>
+                    </div>
+                    <div class="col-md-2 mb-3 mt-4">
+                        <input type="text" id="tourDuration" class="form-control" placeholder="Duration" required>
+                    </div>
+                    <div class="col-md-2 mb-3 mt-4">
+                        <input type="date" id="tourStartingDate" class="form-control" required>
+                    </div>
+                    <div class="col-md-2 mb-3 mt-4">
+                        <input type="date" id="tourEndingDate" class="form-control" required>
+                    </div>
+                    <div class="col-md-2 mb-3 mt-4">
                         <input type="file" id="image" name="image" class="form-control" accept="image/*" required>
                     </div>
                     <div class="col-md-2 mt-4">
@@ -86,6 +101,11 @@
                         <th scope="col">Hotel ID</th>
                         <th scope="col">Category</th>
                         <th scope="col">Description</th>
+                        <th scope="col">Price</th>
+                        <th scope="col">Tagline</th>
+                        <th scope="col">Duration</th>
+                        <th scope="col">Starting Date</th>
+                        <th scope="col">Ending Date</th>
                         <th scope="col">Image</th>
                         <th scope="col">Actions</th>
                     </tr>
@@ -233,9 +253,14 @@
                     <td>${tour.hotel_id}</td>
                     <td>${tour.category}</td>
                     <td>${tour.description}</td>
+                    <td>${tour.Price}</td>
+                    <td>${tour.Tagline}</td>
+                    <td>${tour.Duration}</td>
+                    <td>${tour.Starting_date}</td>
+                    <td>${tour.Ending_date}</td>
                     <td>${tour.image}</td>
                     <td>
-                        <button class="btn btn-sm btn-primary" onclick="editTour(${tour.tour_id}, '${tour.hotel_id}', '${tour.category}', '${tour.description}', '${tour.image}')">Update</button>
+                        <button class="btn btn-sm btn-primary" onclick="editTour(${tour.tour_id}, '${tour.hotel_id}', '${tour.category}', '${tour.description}', '${tour.Price}', '${tour.Tagline}', '${tour.Duration}', '${tour.Starting_date}', '${tour.Ending_date}', '${tour.image}')">Update</button>
                         <button class="btn btn-sm btn-danger" onclick="deleteTour(${tour.tour_id})">Delete</button>
                     </td>
                     `;
@@ -246,8 +271,12 @@
                             console.error("Error fetching tours:", error);
                         });
                 }
-                function editTour(id, hotelId, category, description, image) {
-                        const tourToEdit = { tour_id: id, hotel_id: hotelId, category: category, description: description, image: image };
+                function editTour(id, hotelId, category, description, image, price, tagline, duration, startingDate, endingDate) {
+                        const tourToEdit = { tour_id: id, hotel_id: hotelId, category: category, description: description, image: image , Price: price,
+                        Tagline: tagline,
+                        Duration: duration,
+                        Starting_date: startingDate,
+                        Ending_date: endingDate};
                         const editForm = createTourEditForm(tourToEdit);
                         const tourList = document.getElementById("tourList");
                         tourList.innerHTML = "";
@@ -276,6 +305,21 @@
                         <div class="col-md-2 mb-3 mt-4">
                             <input type="file" id="editTourImage" class="form-control" value="${tour.image}" accept="image/* ">
                         </div>
+                        <div class="col-md-2 mb-3 mt-4">
+                <input type="number" id="editTourPrice" class="form-control" value="${tour.Price}" required>
+            </div>
+            <div class="col-md-4 mb-3 mt-4">
+                <input type="text" id="editTourTagline" class="form-control" value="${tour.Tagline}" required>
+            </div>
+            <div class="col-md-2 mb-3 mt-4">
+                <input type="text" id="editTourDuration" class="form-control" value="${tour.Duration}" required>
+            </div>
+            <div class="col-md-2 mb-3 mt-4">
+                <input type="date" id="editTourStartingDate" class="form-control" value="${tour.Starting_date}" required>
+            </div>
+            <div class="col-md-2 mb-3 mt-4">
+                <input type="date" id="editTourEndingDate" class="form-control" value="${tour.Ending_date}" required>
+            </div>
                         <div class="col-md-2 mt-4">
                             <button class="btn btn-primary" onclick="updateTour(${tour.tour_id})">Save</button>
                             <button class="btn btn-danger" onclick="cancelEdit()">Cancel</button>
@@ -292,12 +336,23 @@
                         const updatedHotelId = document.getElementById('editTourHotelId').value;
                         const updatedCategory = document.getElementById('editTourCategory').value;
                         const updatedDescription = document.getElementById('editTourDescription').value;
+                        const updatedPrice = document.getElementById('editTourPrice').value;
+                        const updatedTagline = document.getElementById('editTourTagline').value;
+                        const updatedDuration = document.getElementById('editTourDuration').value;
+                        const updatedStartingDate = document.getElementById('editTourStartingDate').value;
+                        const updatedEndingDate = document.getElementById('editTourEndingDate').value;
+
                         const updatedImage = document.getElementById('editTourImage').files[0]; // Assuming the image can be updated
 
                         const formData = new FormData();
                         formData.append("hotel_id", updatedHotelId);
                         formData.append("category", updatedCategory);
                         formData.append("description", updatedDescription);
+                        formData.append("Price", updatedPrice);
+                        formData.append("Tagline", updatedTagline);
+                        formData.append("Duration", updatedDuration);
+                        formData.append("Starting_date", updatedStartingDate);
+                        formData.append("Ending_date", updatedEndingDate);
                          if (updatedImage) {
                             formData.append("image", updatedImage);
                         }
@@ -336,11 +391,24 @@
                     const category = document.getElementById("categoryDropdown").value;
                     const description = document.getElementById("tourDescription").value;
                     const imageFile = document.getElementById("image").files[0];
+                    const price = document.getElementById("tourPrice").value;
+                    const tagline = document.getElementById("tourTagline").value;
+                    const duration = document.getElementById("tourDuration").value;
+                    const startingDate = document.getElementById("tourStartingDate").value;
+                    const endingDate = document.getElementById("tourEndingDate").value;
+
                     const formData = new FormData();
+
                     formData.append("hotel_id", hotelId);
                     formData.append("category", category);
                     formData.append("description", description);
                     formData.append("image", imageFile);
+                    formData.append("Price", price); // Include 'Price'
+                    formData.append("Tagline", tagline); // Include 'Tagline'
+                    formData.append("Duration", duration); // Include 'Duration'
+                    formData.append("Starting_date", startingDate); // Include 'Starting_date'
+                    formData.append("Ending_date", endingDate); // Include 'Ending_date'
+
 
                     fetch("/tour/add", {
                         method: "POST",

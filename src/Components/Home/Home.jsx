@@ -24,7 +24,7 @@ const Home = () => {
           </h1>
         </div>
 
-        <div className="cardDiv grid">
+        {/* <div className="cardDiv grid">
           <div className="destinationInput">
             <label htmlFor ="city">Search your Destination:</label>
             <div className="input flex">
@@ -54,9 +54,9 @@ const Home = () => {
           <div className="searchOptions flex">
             <HiFilter classsName="icon"/>
             <span>MORE FILTERS</span>
-          </div>
+          </div> */}
 
-        </div>
+        {/* </div> */}
 
         <div className="homeFooterIcons flex">
           <div className="rightIcons">

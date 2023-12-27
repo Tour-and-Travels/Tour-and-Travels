@@ -9,15 +9,34 @@ const db = mysql.createConnection({
 });
 
 const touradd = (req, res) => {
-  const { hotel_id, category, description } = req.body;
+  const {
+    hotel_id,
+    category,
+    description,
+    Price,
+    Tagline,
+    Duration,
+    Starting_date,
+    Ending_date,
+  } = req.body;
   const image = req.file;
   console.log(req.file); // Assuming the image is uploaded using Multer middleware
   const imageBuffer = fs.readFileSync(image.path); // Read the uploaded image
   // console.log(imageBuffer);
-  const INSERT_tour_QUERY = `INSERT INTO tour (hotel_id, category, description, image) VALUES (?, ?, ?, ?)`;
+  const INSERT_tour_QUERY = `INSERT INTO tour (hotel_id, category, description, image,Price,Tagline,Duration,Starting_date,Ending_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`;
   db.query(
     INSERT_tour_QUERY,
-    [hotel_id, category, description, imageBuffer],
+    [
+      hotel_id,
+      category,
+      description,
+      imageBuffer,
+      Price,
+      Tagline,
+      Duration,
+      Starting_date,
+      Ending_date,
+    ],
     (error, results) => {
       if (error) {
         res.status(500).send({ message: "Error adding tour", error });
@@ -42,7 +61,16 @@ const tourread = (req, res) => {
 
 const tourupdate = (req, res) => {
   const tour_id = req.params.id;
-  const { hotel_id, category, description } = req.body;
+  const {
+    hotel_id,
+    category,
+    description,
+    Price,
+    Tagline,
+    Duration,
+    Starting_date,
+    Ending_date,
+  } = req.body;
   const image = req.file; // Assuming the image is uploaded using Multer middleware
 
   // Check if the image is present in the request
@@ -51,11 +79,26 @@ const tourupdate = (req, res) => {
     const imageBuffer = fs.readFileSync(image.path);
 
     // Update query with the image
-    const UPDATE_tour_QUERY = `UPDATE tour SET hotel_id = ?, category = ?, description = ?, image = ? WHERE tour_id = ?`;
+    const UPDATE_tour_QUERY = `UPDATE tour SET hotel_id = ?, category = ?, description = ?, image = ?   Price = ?,
+    Tagline = ?,
+    Duration = ?,
+    Starting_date = ?,
+    Ending_date = ? WHERE tour_id = ?`;
 
     db.query(
       UPDATE_tour_QUERY,
-      [hotel_id, category, description, imageBuffer, tour_id],
+      [
+        hotel_id,
+        category,
+        description,
+        imageBuffer,
+        Price,
+        Tagline,
+        Duration,
+        Starting_date,
+        Ending_date,
+        tour_id,
+      ],
       (error, results) => {
         if (error) {
           res.status(500).send({ message: "Error updating tour", error });
@@ -68,7 +111,11 @@ const tourupdate = (req, res) => {
     );
   } else {
     // Update query without the image
-    const UPDATE_tour_NO_IMAGE_QUERY = `UPDATE tour SET hotel_id = ?, category = ?, description = ? WHERE tour_id = ?`;
+    const UPDATE_tour_NO_IMAGE_QUERY = `UPDATE tour SET hotel_id = ?, category = ?, description = ? Price = ?,
+    Tagline = ?,
+    Duration = ?,
+    Starting_date = ?,
+    Ending_date = ? WHERE tour_id = ?`;
 
     db.query(
       UPDATE_tour_NO_IMAGE_QUERY,
