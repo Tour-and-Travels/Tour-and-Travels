@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="/style.css">
+    </link>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+
+<body>
+    <nav>
+        <h3>Tour and Travels Database Administration</h3>
+        <ul>
+            {{!-- <li><a href="/">Home</a></li> --}}
+            <li><a href="/login">Login</a></li>
+            <li><a href="/register">Register</a></li>
+        </ul>
+    </nav>
+    <div class="container mt-4">
+        <div class="card">
+            <div class="card-header bold">
+                Registration form
+            </div>
+            <div class="card-body">
+                <form id="registrationForm">
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Name</label>
+                        <input type="text" class="form-control" id="name" name="name">
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email address</label>
+                        <input type="email" class="form-control" id="email" name="email">
+                    </div>
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Password</label>
+                        <input type="password" class="form-control" id="password" name="password">
+                    </div>
+                    <div class="mb-3">
+                        <label for="confirmPassword" class="form-label">Confirm Password</label>
+                        <input type="password" class="form-control" id="confirmPassword" name="confirmPassword">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Register</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div id="snackbar">{{message}}</div>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+        crossorigin="anonymous">
+</script>
+<script>
+    const validateEmail = (email) => {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
+        };
+        const validatePasswordLength = (password) => {
+            const minLength = 8;
+            return password.length >= minLength;
+        };
+        const validatePasswordCharacter = (password) => {
+            const specialCharacterRegex = /[!@#$%^&*()_+{}\[\]:;<>,.?~\\-]/;
+            return specialCharacterRegex.test(password);
+        };
+    function showSnackbar(message, duration) {
+        const snackbar = document.getElementById("snackbar");
+        snackbar.textContent = message;
+        snackbar.className = "show";
+         if (message.includes("Registration is successful")) {
+            snackbar.style.backgroundColor = "green";
+        }
+        setTimeout(() => {
+            snackbar.className = snackbar.className.replace("show", "");
+        }, duration);
+    }
+
+   
+    const registrationForm = document.getElementById("registrationForm");
+    registrationForm.addEventListener("submit", async (event) => {
+        event.preventDefault();
+
+        const formData = new FormData(registrationForm);
+        const name = formData.get("name");
+        const email = formData.get("email");
+        const password = formData.get("password");
+        const confirmPassword = formData.get("confirmPassword");
+
+        if(!name || !email || !password || !confirmPassword){
+            showSnackbar("Enter all the details", 3000);
+            return; 
+        }
+        if (password !== confirmPassword) {
+            showSnackbar("Passwords do not match", 3000);
+            return; 
+        }
+
+        
+        if (!validateEmail(email)) {
+            showSnackbar("Give a valid email id", 3000);
+            return; 
+        }
+
+        
+        if (!validatePasswordLength(password)) {
+            showSnackbar("Password should have at least 8 characters", 3000);
+            return; 
+        }
+
+        if (!validatePasswordCharacter(password)) {
+            showSnackbar("Password should contain at least one special character", 3000);
+            return; 
+        }
+        try {
+            const config = {
+                headers: {
+                    "Content-type": "application/json",
+                },
+            };
+            const { data } = await axios.post(
+                "/auth/register",
+                { name, email, password },
+                config
+            );
+            console.log(data);
+            localStorage.setItem("adminInfo", JSON.stringify(data));
+            showSnackbar("Registration is successful", 1000);
+             setTimeout(() => {
+                window.location.href = "/";
+            }, 2000);
+            window.location.href = "/";
+        } catch (error) {
+            if (error.response && error.response.status === 400 && error.response.data.message === "Email is already in use") {
+                showSnackbar("Email is already in use", 3000);
+            } else {
+                console.log("Error:", error);
+                showSnackbar("An error occurred", 3000);
+            }
+        }
+    });
+</script>
+    </script>
+</body>
+
+</html>

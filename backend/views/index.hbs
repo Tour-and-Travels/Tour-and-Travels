@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Document</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+            integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+        <link rel="stylesheet" href="/style.css">
+        </link>
+    </head>
+    <body>
+        <nav>
+            <h3>Tour and Travels Database Administration</h3>
+            <ul>
+                <li><a href="/">Admin Dashboard</a></li>
+                <li><button class="btn btn-primary" id = "logoutBtn">Logout</button></li>
+            </ul>
+        </nav>
+        <div class="container mt-4">
+            <div id="hotels-section">
+                <h2>Hotels</h2>
+                <form id="addHotelForm">
+                    <form id="addHotelForm" class="mb-4">
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <input type="text" id="hotelName" class="form-control" placeholder="Hotel Name" required>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <input type="text" id="hotelLocation" class="form-control" placeholder="Location" required>
+                            </div>
+                            <div class="col-md-4">
+                                <button type="submit" class="btn btn-primary">Add Hotel</button>
+                            </div>
+                        </div>
+                </form>
+                <ul id="hotelList"></ul>
+                <table class="table table-borderless mt-4">
+                    <thead>
+                        <tr>
+                            <th scope="col">ID</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Location</th>
+                            <th scope="col">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="hotelsTableBody">
+
+                    </tbody>
+                </table>
+            </div>
+        <div id="tour-packages-section" class="mt-5">
+            <h2>Tour List</h2>
+            <form id="addTourPackageForm" class="mb-4" enctype="multipart/form-data">
+                <div class="row">
+                    <div class="col-md-2 mb-3">
+                        <label for="hotelDropdown" class="form-label mb-0">Select Hotel</label>
+                        <select id="hotelDropdown" class="form-control">
+                        </select>
+                    </div>
+                    <div class="col-md-2 mb-3">
+                        <label for="categoryDropdown" class="form-label mb-0">Select Category</label>
+                        <select id="categoryDropdown" class="form-control">
+                            <option value="Ecotourism">Ecotourism</option>
+                            <option value="Hill Station">Hill Station</option>
+                            <option value="Coastal Tour">Coastal Tour</option>
+                            <option value="Cultural">Cultural</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4 mb-3 mt-4">
+                        <input type="text" id="tourDescription" class="form-control" placeholder="Description" required>
+                    </div>
+                    <div class="col-md-2 mb-3 mt-4">
+                        <input type="file" id="image" name="image" class="form-control" accept="image/*" required>
+                    </div>
+                    <div class="col-md-2 mt-4">
+                        <button type="submit" class="btn btn-primary">Add Tour Package</button>
+                    </div>
+                </div>
+            </form>
+            <ul id="tourList"></ul>
+            <table class="table table-borderless mt-4">
+                <thead>
+                    <tr>
+                        <th scope="col">Tour ID</th>
+                        <th scope="col">Hotel ID</th>
+                        <th scope="col">Category</th>
+                        <th scope="col">Description</th>
+                        <th scope="col">Image</th>
+                        <th scope="col">Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="tourPackagesTableBody">
+                   
+                </tbody>
+            </table>
+        </div>
+        </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+        crossorigin="anonymous"></script>
+        <script>
+            const adminInfo = localStorage.getItem("adminInfo");
+            if (!adminInfo) {
+                window.location.href = "/login";
+            }
+            const logoutBtn = document.getElementById("logoutBtn");
+                logoutBtn.addEventListener("click", () => {
+                    localStorage.removeItem("adminInfo");
+                    window.location.href = "/login";
+                });
+            function fetchHotels() {
+                fetch("/hotel")
+                    .then((response) => response.json())
+                    .then((data) => {
+                        const hotels = data.hotels;
+                        const hotelsTableBody = document.getElementById("hotelsTableBody");
+                        hotelsTableBody.innerHTML = ""; 
+                        const hotelDropdown = document.getElementById("hotelDropdown");
+                         hotelDropdown.innerHTML = "";
+                        hotels.forEach((hotel) => {
+                            const row = document.createElement("tr");
+                            row.innerHTML = `
+                <td>${hotel.hotel_id}</td>
+                <td>${hotel.hotel_name}</td>
+                <td>${hotel.location}</td>
+                <td>
+                    <button class="btn btn-sm btn-primary" onclick="editHotel(${hotel.hotel_id}, '${hotel.hotel_name}', '${hotel.location}')">Update</button>
+                    <button class="btn btn-sm btn-danger" onclick="deleteHotel(${hotel.hotel_id})">Delete</button>
+                </td>`;
+                hotelsTableBody.appendChild(row);
+                 const option = document.createElement("option");
+                            option.value = hotel.hotel_id;
+                            option.textContent = `${hotel.hotel_id} - ${hotel.hotel_name}`;
+                            hotelDropdown.appendChild(option);
+                    });
+                })
+                .catch((error) => {
+                    console.error("Error fetching hotels:", error);
+                });
+            }
+            document.getElementById("addHotelForm").addEventListener("submit", function (e) {
+                e.preventDefault();
+                const hotelName = document.getElementById("hotelName").value;
+                const hotelLocation = document.getElementById("hotelLocation").value;
+
+                fetch("/hotel/add", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ hotel_name: hotelName, location: hotelLocation }),
+                })
+                .then((response) => response.json())
+                .then((data) => {
+                    console.log(data.message);
+                    fetchHotels(); 
+                })
+                .catch((error) => {
+                    console.error("Error adding hotel:", error);
+                });
+            });
+            function editHotel(id, name, location) {
+                const hotelToEdit = { hotel_id: id, hotel_name: name, location: location };
+                const editForm = createEditForm(hotelToEdit);
+                const hotelList = document.getElementById("hotelList");
+                hotelList.innerHTML = "";
+                hotelList.appendChild(editForm);
+            }
+            function updateHotel(id) {
+                const updatedHotelName = document.getElementById('editHotelName').value;
+                const updatedHotelLocation = document.getElementById('editHotelLocation').value;
+
+                fetch(`/hotel/update/${id}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ hotel_name: updatedHotelName, location: updatedHotelLocation }),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data.message);
+                    fetchHotels();
+                })
+                .catch(error => {
+                    console.error('Error updating hotel:', error);
+                });
+            }
+            function deleteHotel(id) {
+                fetch(`/hotel/delete/${id}`, {
+                    method: "DELETE",
+                })
+                .then((response) => response.json())
+                .then((data) => {
+                    console.log(data.message);
+                    fetchHotels(); 
+                })
+                .catch((error) => {
+                    console.error("Error deleting hotel:", error);
+                });
+            }
+            function createEditForm(hotel) {
+                const form = document.createElement('form');
+                form.innerHTML = `
+                <div class="row">
+                <div class="col-md-4 mb-3">
+                <input type="text" id="editHotelName" class = "form-control" value="${hotel.hotel_name}" required>
+                </div>
+                <div class="col-md-4 mb-3">
+                <input type="text" id="editHotelLocation" class = "form-control" value="${hotel.location}" required>
+                </div>
+                <div class="col-md-1 mb-4"> <button class="btn btn-primary" onclick="updateHotel(${hotel.hotel_id})">Save</button></div>
+                <div class="col-md-2 mb-4"><button class="btn btn-danger" onclick="cancelEdit()">Cancel</button></div>
+                </div>`;
+                return form;
+            }
+            function fetchTours() {
+                    fetch("/tour")
+                        .then((response) => response.json())
+                        .then((data) => {
+                            const tours = data.tours;
+                            const toursTableBody = document.getElementById("tourPackagesTableBody");
+                            console.log("Tours Table Body:", toursTableBody);
+                            toursTableBody.innerHTML = "";
+                            tours.forEach((tour) => {
+                                console.log(tour.image);
+                                const row = document.createElement("tr");
+                                row.innerHTML = `
+                    <td>${tour.tour_id}</td>
+                    <td>${tour.hotel_id}</td>
+                    <td>${tour.category}</td>
+                    <td>${tour.description}</td>
+                    <td>${tour.image}</td>
+                    <td>
+                        <button class="btn btn-sm btn-primary" onclick="editTour(${tour.tour_id}, '${tour.hotel_id}', '${tour.category}', '${tour.description}', '${tour.image}')">Update</button>
+                        <button class="btn btn-sm btn-danger" onclick="deleteTour(${tour.tour_id})">Delete</button>
+                    </td>
+                    `;
+                                toursTableBody.appendChild(row);
+                            });
+                        })
+                        .catch((error) => {
+                            console.error("Error fetching tours:", error);
+                        });
+                }
+                function editTour(id, hotelId, category, description, image) {
+                        const tourToEdit = { tour_id: id, hotel_id: hotelId, category: category, description: description, image: image };
+                        const editForm = createTourEditForm(tourToEdit);
+                        const tourList = document.getElementById("tourList");
+                        tourList.innerHTML = "";
+                        tourList.appendChild(editForm);
+                        fetchHotelsForDropdown()
+                        fetchCategoriesForDropdown();
+                    }
+
+                function createTourEditForm(tour) {
+                    const form = document.createElement('form');
+                    form.innerHTML = `
+                <div class="row">
+                    <div class="col-md-2 mb-3">
+                        <select id="editTourHotelId" class="form-control" required>
+                            <!-- Options will be populated dynamically -->
+                        </select>
+                    </div>
+                    <div class="col-md-2 mb-3">
+                        <select id="editTourCategory" class="form-control" required>
+                            <!-- Options will be populated dynamically -->
+                        </select>
+                    </div>
+                    <div class="col-md-4 mb-3 mt-4">
+                            <input type="text" id="editTourDescription" class="form-control" value="${tour.description}" required>
+                        </div>
+                        <div class="col-md-2 mb-3 mt-4">
+                            <input type="file" id="editTourImage" class="form-control" value="${tour.image}" accept="image/* ">
+                        </div>
+                        <div class="col-md-2 mt-4">
+                            <button class="btn btn-primary" onclick="updateTour(${tour.tour_id})">Save</button>
+                            <button class="btn btn-danger" onclick="cancelEdit()">Cancel</button>
+                        </div>
+                </div>`;
+                // Set default values for hotel_id and category
+                form.querySelector('#editTourHotelId').value = tour.hotel_id;
+                form.querySelector('#editTourCategory').value = tour.category;
+
+                return form;
+    }
+
+                    function updateTour(id) {
+                        const updatedHotelId = document.getElementById('editTourHotelId').value;
+                        const updatedCategory = document.getElementById('editTourCategory').value;
+                        const updatedDescription = document.getElementById('editTourDescription').value;
+                        const updatedImage = document.getElementById('editTourImage').files[0]; // Assuming the image can be updated
+
+                        const formData = new FormData();
+                        formData.append("hotel_id", updatedHotelId);
+                        formData.append("category", updatedCategory);
+                        formData.append("description", updatedDescription);
+                         if (updatedImage) {
+                            formData.append("image", updatedImage);
+                        }
+                        console.log(formData);
+                        fetch(`/tour/update/${id}`, {
+                            method: 'PUT',
+                            body: formData,
+                        })
+                            .then(response => response.json())
+                            .then(data => {
+                                console.log(data.message);
+                                fetchTours();
+                            })
+                            .catch(error => {
+                                console.error('Error updating tour:', error);
+                            });
+                    }
+
+           function deleteTour(id) {
+                fetch(`/tour/delete/${id}`, {
+                    method: "DELETE",
+                })
+                    .then((response) => response.json())
+                    .then((data) => {
+                        console.log(data.message);
+                        fetchTours();
+                    })
+                    .catch((error) => {
+                        console.error("Error deleting tour:", error);
+                    });
+            }
+
+                document.getElementById("addTourPackageForm").addEventListener("submit", function (e) {
+                    e.preventDefault();
+                    const hotelId = document.getElementById("hotelDropdown").value;
+                    const category = document.getElementById("categoryDropdown").value;
+                    const description = document.getElementById("tourDescription").value;
+                    const imageFile = document.getElementById("image").files[0];
+                    const formData = new FormData();
+                    formData.append("hotel_id", hotelId);
+                    formData.append("category", category);
+                    formData.append("description", description);
+                    formData.append("image", imageFile);
+
+                    fetch("/tour/add", {
+                        method: "POST",
+                        body: formData,
+                    })
+                        .then((response) => response.json())
+                        .then((data) => {
+                            console.log(data.message);
+                            fetchTours();
+                        })
+                        .catch((error) => {
+                            console.error("Error adding tour:", error);
+                        });
+                });
+                function fetchHotelsForDropdown() {
+                        fetch("/hotel")
+                            .then((response) => response.json())
+                            .then((data) => {
+                                const hotelsDropdown = document.getElementById("editTourHotelId");
+                                hotelsDropdown.innerHTML = "";
+                                data.hotels.forEach((hotel) => {
+                                    const option = document.createElement("option");
+                                    option.value = hotel.hotel_id;
+                                    option.textContent = `${hotel.hotel_id} - ${hotel.hotel_name}`;
+                                    hotelsDropdown.appendChild(option);
+                                });
+                            })
+                            .catch((error) => {
+                                console.error("Error fetching hotels:", error);
+                            });
+                    }
+
+                function fetchCategoriesForDropdown() {
+                        const categoriesDropdown = document.getElementById("editTourCategory");
+                        categoriesDropdown.innerHTML = "";
+                        const categories = ["Ecotourism", "Hill Station", "Coastal Tour", "Cultural"];
+                        categories.forEach((category) => {
+                            const option = document.createElement("option");
+                            option.value = category;
+                            option.textContent = category;
+                            categoriesDropdown.appendChild(option);
+                        });
+                    }
+                window.onload = () => {
+                    fetchHotels();
+                    fetchTours();
+                };
+        </script>
+    </body>
+</html>
