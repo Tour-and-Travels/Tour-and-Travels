@@ -1,119 +1,123 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,500;0,600;0,700;1,400&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,500;0,600;0,700;1,400&display=swap");
 
-*{
-    padding:0;
-    margin:0;
-    box-sizing: border-box;
-    font-family: 'Poppins', sans-serif;
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
 }
 
-:root{
-    --PrimaryColor: hsl(199,100% ,33%);
-    --SecondaryColor : hsl(187, 85% ,43%);
-    --gradientColor: linear-gradient(to right , hsl(187 , 85% , 43%) , hsl(199, 100% ,33%));
-    --whiteColor:  hsl(0, 0%, 100%);
-    --blackColor: hsl(201, 33% ,16%);
-    --textColor: hsl(240  ,4% ,36%);
-    --whiteColorDeam: hsl(0 , 0% , 93%);
-    --greyText: rgb(190 , 190 , 190);
-    --inputColor: rgb(239 ,239 , 239);
-    --bodyColor: rgb(240 ,240 ,246);
-    --cardBG: rgb(225 ,225 ,235);
-
+:root {
+  --PrimaryColor: hsl(199, 100%, 33%);
+  --SecondaryColor: hsl(187, 85%, 43%);
+  --gradientColor: linear-gradient(
+    to right,
+    hsl(187, 85%, 43%),
+    hsl(199, 100%, 33%)
+  );
+  --whiteColor: hsl(0, 0%, 100%);
+  --blackColor: hsl(201, 33%, 16%);
+  --textColor: hsl(240, 4%, 36%);
+  --whiteColorDeam: hsl(0, 0%, 93%);
+  --greyText: rgb(190, 190, 190);
+  --inputColor: rgb(239, 239, 239);
+  --bodyColor: rgb(240, 240, 246);
+  --cardBG: rgb(225, 225, 235);
 }
-a{
-    text-decoration: none;
-}
-
-li{
-    list-style: none;
-}
-
-.section{
-    padding: 4rem 0 2rem;
+a {
+  text-decoration: none;
 }
 
-.container{
-    padding-left: 1.5rem;
-    padding-right: 1.5rem;
-}
-.icon{
-    font-size: 2rem;
-    cursor: pointer;
+li {
+  list-style: none;
 }
 
-.flex{
-    display: flex;
-    align-items: center;
+.section {
+  padding: 4rem 0 2rem;
 }
 
-.grid{
-    display: grid;
-    align-items: center;
+.container {
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+.icon {
+  font-size: 2rem;
+  cursor: pointer;
 }
 
-.btn{
-    padding: .6rem 1.5rem;
-    background: var(--gradientColor);
-    border-radius: 3rem;
-    border: none;
-    outline: none;
-    cursor: pointer;
-
+.flex {
+  display: flex;
+  align-items: center;
 }
 
-.btn a{
-    background: var(--gradientColor);
-    font-weight: 500;
-    color: var(--whiteColor);
-
+.grid {
+  display: grid;
+  align-items: center;
 }
 
-.btn:hover{
-    background: var(--SecondaryColor);
-
+.btn {
+  padding: 0.6rem 1.5rem;
+  background: var(--gradientColor);
+  border-radius: 3rem;
+  border: none;
+  outline: none;
+  cursor: pointer;
 }
 
-img , video{
-    width : 100%;
-    height: auto;
+.btn a {
+  background: var(--gradientColor);
+  font-weight: 500;
+  color: var(--whiteColor);
 }
 
-input{
-    font-size: 100%;
+.btn:hover {
+  background: var(--SecondaryColor);
 }
 
-body{
-    background: var(--bodyColor);
+img,
+video {
+  width: 100%;
+  height: auto;
 }
 
+input {
+  font-size: 100%;
+}
 
+body {
+  background: var(--bodyColor);
+}
 
+@import url("https://fonts.googleapis.com/css2?family=Libre+Baskerville&family=Poppins:wght@300&display=swap");
 
+.App {
+  min-height: 100vh;
+  /* display: flex; */
+  background-position: center;
+  background-size: cover;
+}
 
+::-webkit-scrollbar {
+  width: 10px;
+  margin-left: 1px;
+  height: 100%;
+  border-radius: 10px;
+  background-color: #eff6f9db;
+}
 
+::-webkit-scrollbar-thumb {
+  background: #09101824;
+  border-radius: 10px;
+}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+::-webkit-scrollbar-thumb:hover {
+  background: #0101138f;
+  border-radius: 10px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 10px;
+}
+.colour {
+  color: #cef8af;
+}

@@ -1,4 +1,84 @@
-:root{--PrimaryColor: hsl(199,100% ,33%);--SecondaryColor: hsl(187, 85% ,43%);--gradientColor: linear-gradient(to right , hsl(187 , 85% , 43%) , hsl(199, 100% ,33%));--whiteColor: hsl(0, 0%, 100%);--blackColor: hsl(201, 33% ,16%);--textColor: hsl(240 ,4% ,36%);--whiteColorDeam: hsl(0 , 0% , 93%);--greyText: rgb(190 , 190 , 190);--inputColor: rgb(239 ,239 , 239);--bodyColor: rgb(240 ,240 ,246);--cardBG: rgb(225 ,225 ,235)}.header{position:fixed;display:flex;align-items:center;justify-content:space-between;background:var(--whiteColorDeam);width:100%;padding:1rem;z-index:1000;box-shadow:0 2px 4px rgba(2,15,29,.242)}.header .logo{color:var(--blackColor);font-weight:600;cursor:pointer;align-items:center;justify-content:center}.header .logo .icon{font-size:25px;color:var(--PrimaryColor);transform:translateY(5px)}@media screen and (max-width: 768px){.header .navBar{position:absolute;background:var(--whiteColorDeam);height:max-content;width:80%;border-radius:1rem;top:-500rem;left:50%;padding:1rem;transform:translate(-50%);z-index:2000;box-shadow:0 2px 4px rgba(2,15,29,.904);transition:.1s ease-in-out}.header .navBar .navLists{flex-direction:column;justify-content:center;width:100%;margin:auto;padding:.5rem 0}.header .navBar .navLists .navItem{padding:.5rem 0}.header .navBar .navLists .navItem .navLink{color:var(--textColor);font-size:.9rem;font-weight:600}.header .navBar .navLists .navItem .navLink:hover{color:var(--PrimaryColor)}.header .navBar .navLists .btn{margin-top:1rem}.header .navBar .navLists .btn a{font-weight:600;color:var(--whiteColor)}.header .navBar .closeNavbar{position:absolute;top:1rem;right:1.5rem;color:var(--PrimaryColor)}.header .navBar .closeNavbar:hover{color:var(--SecondaryColor)}.header .activeNavbar{top:7rem}}.header .toggleNavbar .icon{font-size:.25px;color:var(--PrimaryColor)}.header .toggleNavbar:hover.icon{color:var(--SecondaryColor)}/*# sourceMappingURL=navbar.css.map */oseNavbar {
+:root {
+  --PrimaryColor: hsl(199, 100%, 33%);
+  --SecondaryColor: hsl(187, 85%, 43%);
+  --gradientColor: linear-gradient(
+    to right,
+    hsl(187, 85%, 43%),
+    hsl(199, 100%, 33%)
+  );
+  --whiteColor: hsl(0, 0%, 100%);
+  --blackColor: hsl(201, 33%, 16%);
+  --textColor: hsl(240, 4%, 36%);
+  --whiteColorDeam: hsl(0, 0%, 93%);
+  --greyText: rgb(190, 190, 190);
+  --inputColor: rgb(239, 239, 239);
+  --bodyColor: rgb(240, 240, 246);
+  --cardBG: rgb(225, 225, 235);
+}
+.header {
+  position: fixed;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--whiteColorDeam);
+  width: 100%;
+  padding: 1rem;
+  z-index: 1000;
+  box-shadow: 0 2px 4px rgba(2, 15, 29, 0.242);
+}
+.header .logo {
+  color: var(--blackColor);
+  font-weight: 600;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+}
+.header .logo .icon {
+  font-size: 25px;
+  color: var(--PrimaryColor);
+  transform: translateY(5px);
+}
+@media screen and (max-width: 768px) {
+  .header .navBar {
+    position: absolute;
+    background: var(--whiteColorDeam);
+    height: max-content;
+    width: 80%;
+    border-radius: 1rem;
+    top: -500rem;
+    left: 50%;
+    padding: 1rem;
+    transform: translate(-50%);
+    z-index: 2000;
+    box-shadow: 0 2px 4px rgba(2, 15, 29, 0.904);
+    transition: 0.1s ease-in-out;
+  }
+  .header .navBar .navLists {
+    flex-direction: column;
+    justify-content: center;
+    width: 100%;
+    margin: auto;
+    padding: 0.5rem 0;
+  }
+  .header .navBar .navLists .navItem {
+    padding: 0.5rem 0;
+  }
+  .header .navBar .navLists .navItem .navLink {
+    color: var(--textColor);
+    font-size: 0.9rem;
+    font-weight: 600;
+  }
+  .header .navBar .navLists .navItem .navLink:hover {
+    color: var(--PrimaryColor);
+  }
+  .header .navBar .navLists .btn {
+    margin-top: 1rem;
+  }
+  .header .navBar .navLists .btn a {
+    font-weight: 600;
+    color: var(--whiteColor);
+  }
+  .header .navBar .closeNavbar {
     position: absolute;
     top: 1rem;
     right: 1.5rem;
@@ -10,6 +90,26 @@
   .header .activeNavbar {
     top: 7rem;
   }
+}
+.header .toggleNavbar .icon {
+  font-size: 0.25px;
+  color: var(--PrimaryColor);
+}
+.header .toggleNavbar:hover.icon {
+  color: var(--SecondaryColor);
+} /*# sourceMappingURL=navbar.css.map */
+oseNavbar {
+  position: absolute;
+  top: 1rem;
+  right: 1.5rem;
+  color: var(--PrimaryColor);
+}
+.header .navBar .closeNavbar:hover {
+  color: var(--SecondaryColor);
+}
+.header .activeNavbar {
+  top: 7rem;
+}
 
 .header .toggleNavbar .icon {
   font-size: 0.25px;
@@ -17,4 +117,85 @@
 }
 .header .toggleNavbar:hover.icon {
   color: var(--SecondaryColor);
-}/*# sourceMappingURL=navbar.css.map */
+} /*# sourceMappingURL=navbar.css.map */
+.navBarSection {
+  width: 100%;
+  background-color: #ffffff;
+  border-bottom: 1px solid #ccc;
+}
+
+.header {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 10px 20px;
+  align-items: center;
+}
+
+.logoDiv {
+  flex: 1;
+}
+
+.logo {
+  text-decoration: none;
+  color: #333;
+  display: flex;
+  align-items: center;
+}
+
+.icon {
+  font-size: 24px;
+  margin-right: 5px;
+}
+
+.activeNavbar {
+  transform: translateX(0);
+}
+
+.navLists.horizontal {
+  display: flex;
+  list-style-type: none;
+  padding: 0;
+}
+
+.navItem {
+  margin-right: 20px;
+}
+
+.navLink {
+  text-decoration: none;
+  color: #333;
+  font-weight: bold;
+  transition: color 0.3s ease;
+}
+
+.navLink:hover {
+  color: #000;
+}
+
+.toggleNavBar {
+  font-size: 24px;
+  cursor: pointer;
+  display: none;
+}
+
+.closeNavbar {
+  font-size: 24px;
+  cursor: pointer;
+}
+
+@media screen and (max-width: 768px) {
+  .toggleNavBar {
+    display: block;
+  }
+
+  .navBar {
+    position: absolute;
+    top: 0;
+    left: -100%;
+    height: 100vh;
+    width: 70%;
+    background-color: #fff;
+    z-index: 999;
+    transition: transform 0.3s ease-in-out;
+  }
+}

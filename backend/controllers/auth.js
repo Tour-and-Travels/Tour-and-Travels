@@ -104,5 +104,98 @@ const login = (req, res) => {
     }
   );
 };
+const userregister = (req, res) => {
+  // console.log(req.body);
+  const { name, email, password, confirmPassword, phone_no } = req.body;
+  const db = mysql.createConnection({
+    host: "localhost",
+    user: "root",
+    password: "",
+    database: "tourdb",
+  });
+  db.query(
+    "SELECT email FROM user where email = ?",
+    [email],
+    async (error, results) => {
+      if (error) {
+        console.log(error);
+      }
+      const hashPassword = await bcrypt.hash(password, 8);
+      if (results.length > 0) {
+        return res.status(400).json({ message: "Email is already in use" });
+      }
+      db.query("INSERT INTO user SET ?", {
+        name: name,
+        email: email,
+        password: hashPassword,
+        phone_no: phone_no,
+      });
+      db.query(
+        "SELECT * FROM user WHERE email = ?",
+        [email],
+        async (error, results) => {
+          if (error) {
+            console.log(error);
+            return res
+              .status(400)
+              .json({ message: "Invalid Email id or Password" });
+          } else {
+            const newUserId = results.user_id;
+            // console.log(results.email);
+            const token = generateToken(newUserId);
+            const message = "Registration is successful";
+            return res.status(201).json({
+              message: message,
+              token: token,
+              user: results,
+            });
+          }
+        }
+      );
+    }
+  );
+};
+const userlogin = (req, res) => {
+  const { email, password } = req.body;
 
-export { register, login };
+  const db = mysql.createConnection({
+    host: "localhost",
+    user: "root",
+    password: "",
+    database: "tourdb",
+  });
+
+  db.query(
+    "SELECT * FROM user WHERE email = ?",
+    [email],
+    async (error, results) => {
+      if (error) {
+        console.log(error);
+      } else if (!email || !password) {
+        return res.status(400).json({ message: "Enter all the details" });
+      } else if (results.length === 0) {
+        return res
+          .status(400)
+          .json({ message: "Invalid Email id or Password" });
+      } else {
+        const user = results[0];
+        // console.log(admin.password);
+        // console.log(password);
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (isMatch) {
+          const token = generateToken(user.user_id);
+          const message = "Login is successful";
+          // res.redirect(`/?message=${message}&token=${token}`);
+          return res.status(201).json({
+            message: message,
+            token: token,
+            user: user,
+          });
+        } else {
+          return res.status(400).json({ message: "Email is already in use" });
+        }
+      }
+    }
+  );
+};
+export { register, login, userregister, userlogin };
