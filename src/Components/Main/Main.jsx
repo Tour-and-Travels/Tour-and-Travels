@@ -58,7 +58,8 @@ const Main = () => {
                 </div>
 
                 <button className="btn flex">
-                  DETAILS <HiOutlineClipboardCheck className="icon" />
+                <Link to="/booking-details">BOOK NOW</Link>
+                <HiOutlineClipboardCheck className="icon" />
                 </button>
               </div>
             </div>
