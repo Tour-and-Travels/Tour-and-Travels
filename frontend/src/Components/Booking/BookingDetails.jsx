@@ -1,5 +1,5 @@
 // BookingDetails.jsx
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Button,
   FormControl,
@@ -8,6 +8,7 @@ import {
   Select,
   VStack,
   useMediaQuery,
+  useToast,
 } from '@chakra-ui/react';
 import { useHistory } from 'react-router-dom';
 import PaymentPage from '../Payment/PaymentPage';
@@ -17,7 +18,7 @@ const BookingDetails = () => {
   const [isSmallScreen] = useMediaQuery('(max-width: 400px)');
   const history = useHistory();
   const location = useLocation();
-
+ const toast = useToast();
   // Retrieve tour_id from the URL
   const searchParams = new URLSearchParams(location.search);
   const tourIdFromURL = searchParams.get('tour_id');
@@ -30,7 +31,37 @@ const BookingDetails = () => {
     // Add more fields as needed
   });
   const [bookingCompleted, setBookingCompleted] = useState(false);
+const [tourDetails, setTourDetails] = useState(null); // State to store tour details
+const validateEmail = (email) => {
+    // Basic email validation using a regular expression
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
 
+  const isPhoneNumberValid = (phoneNumber) => {
+    // Check if phone number has exactly 10 digits
+    return phoneNumber.length === 10;
+  };
+  useEffect(() => {
+    // Fetch specific tour details when component mounts
+    const fetchTourDetails = async () => {
+      try {
+        const response = await fetch(`/tour/specificread/${tourIdFromURL}`);
+        if (response.ok) {
+          const data = await response.json();
+          setTourDetails(data.tour); // Set the fetched tour details to state
+          console.log(data.tour);
+        } else {
+          throw new Error('Failed to fetch tour details');
+        }
+      } catch (error) {
+        console.error('Error fetching tour details:', error);
+        // Handle error - display a message or retry logic
+      }
+    };
+
+    fetchTourDetails(); // Call the function to fetch tour details
+  }, [tourIdFromURL]);
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setBookingDetails({
@@ -42,8 +73,34 @@ const BookingDetails = () => {
   const handleSubmit = () => {
    
     if (!bookingDetails.name || !bookingDetails.email || !bookingDetails.phone || !bookingDetails.numberOfPeople || !bookingDetails.selectedDate) {
-      // Display an error message or handle validation as needed
-      alert('Please fill in all the required fields.');
+      toast({
+        title: 'Error',
+        description: 'Please fill in all the required fields correctly.',
+        status: 'error',
+        duration: 1000,
+        isClosable: true,
+      });
+      return;
+    }
+    if (!validateEmail(bookingDetails.email)) {
+      toast({
+        title: 'Error',
+        description: 'Please enter a valid email.',
+        status: 'error',
+        duration: 1000,
+        isClosable: true,
+      });
+      return;
+    }
+
+    if (!isPhoneNumberValid(bookingDetails.phone)) {
+      toast({
+        title: 'Error',
+        description: 'Please enter a valid phone number with 10 digits.',
+        status: 'error',
+        duration: 1000,
+        isClosable: true,
+      });
       return;
     }
 

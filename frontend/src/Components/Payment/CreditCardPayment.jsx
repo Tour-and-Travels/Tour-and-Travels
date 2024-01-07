@@ -64,12 +64,12 @@ const CreditCardPayment = () => {
     // For demonstration purposes, show a success notification
     
     setIsOpen(true);
-            fetch("/booking", {
+            fetch("/booking/add", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({ user_id: JSON.parse(localStorage.getItem("userInfo")).user[0].user_id, tour_id:1 }),
+            body: JSON.stringify({ user_id: JSON.parse(localStorage.getItem("userInfo")).user[0].user_id, tour_id:tourIdFromURL }),
         })
         .then((response) => response.json())
         .then((data) => {
@@ -79,7 +79,7 @@ const CreditCardPayment = () => {
             console.error("Error adding booking:", error);
         });
     setTimeout(() => {
-        history.push('/payment-success?tour_id=${tourIdFromURL}');
+        history.push(`/payment-success?tour_id=${tourIdFromURL}`);
       }, 1000);
 
   };

@@ -131,6 +131,7 @@ const Signup = () => {
         { name, email, password, phone_no },
         config
       );
+      console.log(data);
       toast({
         title: "Registration is successful",
         status: "success",
@@ -139,14 +140,19 @@ const Signup = () => {
         position: "bottom",
       });
       localStorage.setItem("userInfo", JSON.stringify(data));
-      // setLoading(false);
-      // history.push("/chat");
       setTimeout(() => {
         setLoading(false);
         setShouldRefresh(true);
-        history.push("/");
+        const intendedUrl = localStorage.getItem("intendedUrl");
+        if (intendedUrl) {
+          history.push(intendedUrl);
+          localStorage.removeItem("intendedUrl");
+        } else {
+          history.push("/");
+        }
       }, 1000); // 1000ms delay (1 second) as an example
     } catch (error) {
+      console.log(error);
       toast({
         title: "Some Error Occurred!",
         status: "error",
@@ -197,7 +203,7 @@ const Signup = () => {
         </InputGroup>
       </FormControl>
       <FormControl id="password" isRequired mb="3" borderColor="black">
-        <FormLabel>Password</FormLabel>
+        <FormLabel>Confirm Password</FormLabel>
         <InputGroup borderColor="black">
           <Input
             type={show ? "text" : "password"}

@@ -70,7 +70,13 @@ const Login = () => {
       setTimeout(() => {
         setLoading(false);
         setShouldRefresh(true);
-        history.push("/");
+        const intendedUrl = localStorage.getItem("intendedUrl");
+        if (intendedUrl) {
+          history.push(intendedUrl);
+          localStorage.removeItem("intendedUrl");
+        } else {
+          history.push("/");
+        }
       }, 1000);
     } catch (error) {
       toast({

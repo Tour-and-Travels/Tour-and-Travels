@@ -4,8 +4,10 @@ import { Link } from 'react-router-dom';
 import './main.css'
 import { HiOutlineClipboardCheck, HiOutlineLocationMarker } from 'react-icons/hi'
 import { useLocation } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 
 const Main = () => {
+  const history = useHistory();
   const [tourData, setTourData] = useState([]);
  const location = useLocation();
 
@@ -28,6 +30,16 @@ const Main = () => {
       .join('');
     return btoa(binary);
   };
+   const handleBookNowClick = (tour_id) => {
+    const user = JSON.parse(localStorage.getItem('userInfo'));
+    if (user) {
+      history.push(`/booking-details?tour_id=${tour_id}`);
+    } else {
+      localStorage.setItem('intendedUrl', `/booking-details?tour_id=${tour_id}`);
+      history.push('/login');
+    }
+  };
+
 
   return (
     <section className="main container section">
@@ -36,7 +48,7 @@ const Main = () => {
       </div>
 
       <div className="secContent">
-        {tourData.map(({ tour_id, image, category, hotel_id, description, Tagline, Price, Duration, Starting_date, Ending_date }) => {
+        {tourData.map(({ tour_id, image, category, hotel_id, description, Tagline,maximum_occupancy, Price, Duration, Starting_date, Ending_date }) => {
           const imageUrl = `data:image/jpeg;base64,${arrayBufferToBase64(image.data)}`;
           const bookNowLink = `/booking-details?tour_id=${tour_id}`; 
           return (
@@ -55,15 +67,15 @@ const Main = () => {
                 <div className="desc">
                   <p>{description}</p>
                   <p>{Tagline}</p>
+                  <p>Maximum Occupancy: {maximum_occupancy}</p>
                   <p>Price per person: {Price}</p>
                   <p>Duration: {Duration}</p>
                   <p>Starting Date: {Starting_date}</p>
                   <p>Ending Date: {Ending_date}</p>
                 </div>
-
-                <button className="btn flex">
-                <Link to={bookNowLink}>BOOK NOW</Link>
-                <HiOutlineClipboardCheck className="icon" />
+                 <button className="btn flex" onClick={() => handleBookNowClick(tour_id)}>
+                  BOOK NOW
+                  <HiOutlineClipboardCheck className="icon" />
                 </button>
               </div>
             </div>

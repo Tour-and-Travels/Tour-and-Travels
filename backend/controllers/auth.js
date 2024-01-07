@@ -105,8 +105,8 @@ const login = (req, res) => {
   );
 };
 const userregister = (req, res) => {
-  // console.log(req.body);
-  const { name, email, password, confirmPassword, phone_no } = req.body;
+  console.log(req.body);
+  const { name, email, password, phone_no } = req.body;
   const db = mysql.createConnection({
     host: "localhost",
     user: "root",
@@ -120,15 +120,15 @@ const userregister = (req, res) => {
       if (error) {
         console.log(error);
       }
-      const hashPassword = await bcrypt.hash(password, 8);
+      const hashedPassword = await bcrypt.hash(password, 10);
       if (results.length > 0) {
         return res.status(400).json({ message: "Email is already in use" });
       }
       db.query("INSERT INTO user SET ?", {
         name: name,
         email: email,
-        password: hashPassword,
         phone_no: phone_no,
+        password: hashedPassword,
       });
       db.query(
         "SELECT * FROM user WHERE email = ?",
@@ -141,8 +141,9 @@ const userregister = (req, res) => {
               .json({ message: "Invalid Email id or Password" });
           } else {
             const newUserId = results.user_id;
-            // console.log(results.email);
+            console.log(results.email);
             const token = generateToken(newUserId);
+            console.log(token);
             const message = "Registration is successful";
             return res.status(201).json({
               message: message,
@@ -171,6 +172,7 @@ const userlogin = (req, res) => {
     async (error, results) => {
       if (error) {
         console.log(error);
+        return res.status(500).json({ message: "Internal server error" });
       } else if (!email || !password) {
         return res.status(400).json({ message: "Enter all the details" });
       } else if (results.length === 0) {
@@ -179,9 +181,13 @@ const userlogin = (req, res) => {
           .json({ message: "Invalid Email id or Password" });
       } else {
         const user = results[0];
-        // console.log(admin.password);
-        // console.log(password);
-        const isMatch = await bcrypt.compare(password, user.password);
+        console.log(password);
+        const hashedPassword = user.password;
+        console.log(hashedPassword);
+        // const check = await bcrypt.hash(password, 8);
+        // console.log(check);
+        const isMatch = await bcrypt.compare(password, hashedPassword);
+        console.log(isMatch);
         if (isMatch) {
           const token = generateToken(user.user_id);
           const message = "Login is successful";

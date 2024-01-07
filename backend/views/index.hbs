@@ -3,7 +3,7 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Document</title>
+        <title>Tour and Travels Administration</title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
             integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
         <link rel="stylesheet" href="/style.css">
@@ -79,6 +79,9 @@
                     <div class="col-md-2 mb-3 mt-4">
                         <input type="text" id="tourDuration" class="form-control" placeholder="Duration" required>
                     </div>
+                    <div class="col-md-4 mb-3 mt-4">
+                        <input type="number" id="tourmaximum_occupancy" class="form-control" placeholder="Maximum occupancy" required>
+                    </div>
                     <div class="col-md-2 mb-3 mt-4">
                         <input type="date" id="tourStartingDate" class="form-control" required>
                     </div>
@@ -101,6 +104,7 @@
                         <th scope="col">Hotel ID</th>
                         <th scope="col">Category</th>
                         <th scope="col">Description</th>
+                        <th scope="col">Maximum occupancy</th>
                         <th scope="col">Price</th>
                         <th scope="col">Tagline</th>
                         <th scope="col">Duration</th>
@@ -253,6 +257,7 @@
                     <td>${tour.hotel_id}</td>
                     <td>${tour.category}</td>
                     <td>${tour.description}</td>
+                    <td>${tour.maximum_occupancy}</td>
                     <td>${tour.Price}</td>
                     <td>${tour.Tagline}</td>
                     <td>${tour.Duration}</td>
@@ -260,7 +265,7 @@
                     <td>${tour.Ending_date}</td>
                     <td>${tour.image}</td>
                     <td>
-                        <button class="btn btn-sm btn-primary" onclick="editTour(${tour.tour_id}, '${tour.hotel_id}', '${tour.category}', '${tour.description}', '${tour.Price}', '${tour.Tagline}', '${tour.Duration}', '${tour.Starting_date}', '${tour.Ending_date}', '${tour.image}')">Update</button>
+                        <button class="btn btn-sm btn-primary" onclick="editTour(${tour.tour_id}, '${tour.hotel_id}', '${tour.category}', '${tour.description}','${tour.maximum_occupancy}', '${tour.Price}', '${tour.Tagline}', '${tour.Duration}', '${tour.Starting_date}', '${tour.Ending_date}', '${tour.image}')">Update</button>
                         <button class="btn btn-sm btn-danger" onclick="deleteTour(${tour.tour_id})">Delete</button>
                     </td>
                     `;
@@ -390,6 +395,7 @@
                     const hotelId = document.getElementById("hotelDropdown").value;
                     const category = document.getElementById("categoryDropdown").value;
                     const description = document.getElementById("tourDescription").value;
+                     const maximum_occupancy = document.getElementById("tourmaximum_occupancy").value;
                     const imageFile = document.getElementById("image").files[0];
                     const price = document.getElementById("tourPrice").value;
                     const tagline = document.getElementById("tourTagline").value;
@@ -402,6 +408,7 @@
                     formData.append("hotel_id", hotelId);
                     formData.append("category", category);
                     formData.append("description", description);
+                    formData.append("tourmaximum_occupancy", maximum_occupancy);
                     formData.append("image", imageFile);
                     formData.append("Price", price); // Include 'Price'
                     formData.append("Tagline", tagline); // Include 'Tagline'

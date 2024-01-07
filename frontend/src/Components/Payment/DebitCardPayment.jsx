@@ -65,7 +65,7 @@ const DebitCardPayment = () => {
     // For demonstration purposes, show a success notification
     setIsOpen(true);
     setTimeout(() => {
-        history.push('/payment-success?tour_id=${tourIdFromURL}');
+        history.push(`/payment-success?tour_id=${tourIdFromURL}`);
       }, 1000);
   };
 

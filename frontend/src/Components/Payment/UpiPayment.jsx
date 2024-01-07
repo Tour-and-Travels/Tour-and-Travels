@@ -55,7 +55,7 @@ const UpiPayment = () => {
       // For demonstration purposes, redirect to a success page
       setIsOpen(true);
       setTimeout(() => {
-         history.push('/payment-success?tour_id=${tourIdFromURL}');
+         history.push(`/payment-success?tour_id=${tourIdFromURL}`);
       }, 1000);
     };
   
