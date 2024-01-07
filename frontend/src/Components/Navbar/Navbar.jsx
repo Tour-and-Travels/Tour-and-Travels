@@ -16,10 +16,11 @@ const Navbar = () => {
   const removeNavbar = () => {
     setActive('navBar');
   };
-
+ const user = JSON.parse(localStorage.getItem('userInfo'));
   const logoutHandler = () => {
     localStorage.removeItem('userInfo');
     history.push('/');
+    window.location.reload();
   };
 
   return (
@@ -40,9 +41,15 @@ const Navbar = () => {
                 Home
               </a>
             </li>
-            <button className="btn" onClick={logoutHandler}>
-              Logout
-            </button>
+            {user ? (
+              <button className="btn" onClick={logoutHandler}>
+                Logout
+              </button>
+            ) : (
+              <button className="btn" onClick={() => history.push('/login')}>
+                Login/Register
+              </button>
+            )}
             
             <div onClick={removeNavbar} className="closeNavbar">
               <AiFillCloseCircle className="icon" />

@@ -23,12 +23,13 @@ const CreditCardPayment = () => {
 
   const searchParams = new URLSearchParams(location.search);
   const tourIdFromURL = searchParams.get('tour_id');
+   const amount = searchParams.get('amount');
   const [creditCardDetails, setCreditCardDetails] = useState({
     cardNumber: '',
     expiryDate: '',
     cvv: '',
     cardHolderName: '',
-    amount: '',
+    amount: amount || '',
   });
 
   const [isOpen, setIsOpen] = useState(false);
@@ -69,7 +70,7 @@ const CreditCardPayment = () => {
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({ user_id: JSON.parse(localStorage.getItem("userInfo")).user[0].user_id, tour_id:tourIdFromURL }),
+            body: JSON.stringify({ user_id: JSON.parse(localStorage.getItem("userInfo")).user.user_id, tour_id:tourIdFromURL }),
         })
         .then((response) => response.json())
         .then((data) => {
@@ -132,16 +133,16 @@ const CreditCardPayment = () => {
         />
       </FormControl>
 
-      <FormControl id="amount" isRequired mb="3">
-        <FormLabel>Enter Amount</FormLabel>
+      <FormControl id="prepopulatedAmount" isRequired mb="3">
+        <FormLabel>Amount</FormLabel>
         <Input
-          placeholder="Enter Amount"
-          type="number"
+          placeholder="Amount"
           name="amount"
           value={creditCardDetails.amount}
-          onChange={handleInputChange}
+          readOnly
         />
       </FormControl>
+
 
       <Button
         bg="black"

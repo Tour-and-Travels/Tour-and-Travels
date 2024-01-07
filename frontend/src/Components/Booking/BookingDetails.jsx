@@ -28,9 +28,9 @@ const BookingDetails = () => {
     phone: '',
     numberOfPeople: '',
     selectedDate: '',
-    // Add more fields as needed
+   
   });
-  const [bookingCompleted, setBookingCompleted] = useState(false);
+const [bookingCompleted, setBookingCompleted] = useState(false);
 const [tourDetails, setTourDetails] = useState(null); // State to store tour details
 const validateEmail = (email) => {
     // Basic email validation using a regular expression
@@ -103,8 +103,45 @@ const validateEmail = (email) => {
       });
       return;
     }
+    if (tourDetails) {
+    const {
+      Price,
+      maximum_occupancy,
+      Starting_date,
+      Ending_date,
+    } = tourDetails;
 
-    
+    const numberOfPeople = parseInt(bookingDetails.numberOfPeople);
+    const selectedDate = new Date(bookingDetails.selectedDate);
+
+    // Calculate total amount
+    const amount = Price * numberOfPeople;
+
+    // Check if the number of people is within the maximum occupancy limit
+    if (numberOfPeople > maximum_occupancy) {
+      toast({
+        title: 'Error',
+        description: `Number of people exceeds maximum occupancy (${maximum_occupancy}).`,
+        status: 'error',
+        duration: 1000,
+        isClosable: true,
+      });
+      return;
+    }
+
+    // Check if the selected date is within the tour date range
+    const startDate = new Date(Starting_date);
+    const endDate = new Date(Ending_date);
+    if (selectedDate < startDate || selectedDate > endDate) {
+      toast({
+        title: 'Error',
+        description: 'Selected date is not within the tour date range.',
+        status: 'error',
+        duration: 1000,
+        isClosable: true,
+      });
+      return;
+    }
   
     console.log('Booking Details submitted:', bookingDetails);
     
@@ -122,8 +159,8 @@ const validateEmail = (email) => {
     setBookingCompleted(true);
 
     // history.push('/payment-options');
-    history.push(`/payment-options?tour_id=${tourIdFromURL}`);
-
+    history.push(`/payment-options?tour_id=${tourIdFromURL}&amount=${amount}`);
+  }
     
   };
 

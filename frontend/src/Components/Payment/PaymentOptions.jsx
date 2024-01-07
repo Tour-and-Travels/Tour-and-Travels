@@ -10,17 +10,18 @@ const PaymentOptions = () => {
 
   const searchParams = new URLSearchParams(location.search);
   const tourIdFromURL = searchParams.get('tour_id');
+   const amount = searchParams.get('amount');
   const handlePayment = (method) => {
     
    
     console.log(`Payment via ${method}`);
 
     if (method === 'debit card') {
-      history.push(`/payment/debit-card?tour_id=${tourIdFromURL}`);
+      history.push(`/payment/debit-card?tour_id=${tourIdFromURL}&amount=${amount}`);
     } else if (method === 'credit card') {
-      history.push(`/payment/credit-card?tour_id=${tourIdFromURL}`);
+      history.push(`/payment/credit-card?tour_id=${tourIdFromURL}&amount=${amount}`);
     } else if (method === 'UPI') {
-      history.push(`/payment/upi?tour_id=${tourIdFromURL}`);
+      history.push(`/payment/upi?tour_id=${tourIdFromURL}&amount=${amount}`);
     }
   };
 

@@ -24,10 +24,11 @@ const UpiPayment = () => {
 
   const searchParams = new URLSearchParams(location.search);
   const tourIdFromURL = searchParams.get('tour_id');
+   const amount = searchParams.get('amount');
     const [upiDetails, setUpiDetails] = useState({
       selectedUpiApp: '',
       upiId: '',
-      amount: '',
+      amount: amount || '',
     });
   
     const [isOpen, setIsOpen] = useState(false);
@@ -54,8 +55,22 @@ const UpiPayment = () => {
   
       // For demonstration purposes, redirect to a success page
       setIsOpen(true);
-      setTimeout(() => {
-         history.push(`/payment-success?tour_id=${tourIdFromURL}`);
+      fetch("/booking/add", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ user_id: JSON.parse(localStorage.getItem("userInfo")).user.user_id, tour_id:tourIdFromURL }),
+        })
+        .then((response) => response.json())
+        .then((data) => {
+            console.log(data.message);
+        })
+        .catch((error) => {
+            console.error("Error adding booking:", error);
+        });
+    setTimeout(() => {
+        history.push(`/payment-success?tour_id=${tourIdFromURL}`);
       }, 1000);
     };
   
@@ -86,14 +101,13 @@ const UpiPayment = () => {
           />
         </FormControl>
 
-        <FormControl id="amount" isRequired mb="3">
-        <FormLabel>Enter Amount</FormLabel>
+        <FormControl id="prepopulatedAmount" isRequired mb="3">
+        <FormLabel>Amount</FormLabel>
         <Input
-          placeholder="Enter Amount"
-          type="number"
+          placeholder="Amount"
           name="amount"
           value={upiDetails.amount}
-          onChange={handleInputChange}
+          readOnly
         />
       </FormControl>
   

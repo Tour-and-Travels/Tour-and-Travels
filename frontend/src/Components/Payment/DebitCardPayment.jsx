@@ -24,12 +24,13 @@ const DebitCardPayment = () => {
 
   const searchParams = new URLSearchParams(location.search);
   const tourIdFromURL = searchParams.get('tour_id');
+  const amount = searchParams.get('amount');
   const [debitCardDetails, setDebitCardDetails] = useState({
     cardNumber: '',
     expiryDate: '',
     cvv: '',
-    firstName: '',
-    amount: '',
+    Name: '',
+    amount: amount || '',
   });
 
   const [isOpen, setIsOpen] = useState(false);
@@ -64,6 +65,20 @@ const DebitCardPayment = () => {
 
     // For demonstration purposes, show a success notification
     setIsOpen(true);
+    fetch("/booking/add", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ user_id: JSON.parse(localStorage.getItem("userInfo")).user.user_id, tour_id:tourIdFromURL }),
+        })
+        .then((response) => response.json())
+        .then((data) => {
+            console.log(data.message);
+        })
+        .catch((error) => {
+            console.error("Error adding booking:", error);
+        });
     setTimeout(() => {
         history.push(`/payment-success?tour_id=${tourIdFromURL}`);
       }, 1000);
@@ -105,27 +120,25 @@ const DebitCardPayment = () => {
         />
       </FormControl>
 
-      <FormControl id="firstName" isRequired mb="3">
-        <FormLabel>First Name</FormLabel>
+      <FormControl id="Name" isRequired mb="3">
+        <FormLabel>Name</FormLabel>
         <Input
-          placeholder="Enter First Name"
-          name="firstName"
-          value={debitCardDetails.firstName}
+          placeholder="Enter Name"
+          name="Name"
+          value={debitCardDetails.Name}
           onChange={handleInputChange}
         />
       </FormControl>
 
-      <FormControl id="amount" isRequired mb="3">
-        <FormLabel>Enter Amount</FormLabel>
+      <FormControl id="prepopulatedAmount" isRequired mb="3">
+        <FormLabel>Amount</FormLabel>
         <Input
-          placeholder="Enter Amount"
-          type="number"
+          placeholder="Amount"
           name="amount"
           value={debitCardDetails.amount}
-          onChange={handleInputChange}
+          readOnly
         />
       </FormControl>
-
       <Button
         bg="black"
         color="white"
