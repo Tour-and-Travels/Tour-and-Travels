@@ -22,7 +22,7 @@ const BookingDetails = () => {
     phone: '',
     numberOfPeople: '',
     selectedDate: '',
-    // Add more fields as needed
+   
   });
   const [bookingCompleted, setBookingCompleted] = useState(false);
 

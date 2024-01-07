@@ -36,11 +36,12 @@
             color: var(--PrimaryColor);
             transform: translateY(5px);
         }
+    
 
 
     }
 
-    @media screen and (max-width: 768px){
+    @media screen and (max-width: 769px){
         .navBar{
             position:absolute;
             background: var(--whiteColorDeam);
@@ -92,6 +93,7 @@
                 top: 1rem;
                 right: 1.5rem;
                 color: var(--PrimaryColor);
+                // display: none;
                 &:hover{
                     color: var(--SecondaryColor);
                 }
@@ -113,3 +115,5 @@
         }
     }
 }
+
+  
