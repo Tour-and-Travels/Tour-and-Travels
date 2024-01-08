@@ -15,9 +15,9 @@
 
 .header{
     position: fixed;
-    display: flex;
+    display: grid;
     align-items: center;
-    justify-content : space-between;
+    // justify-content : space-between;
     background: var(--whiteColorDeam);
     width: 100%;
     padding: 1rem;
@@ -57,7 +57,7 @@
             transition: .1s ease-in-out;
             
             .navLists{
-                flex-direction: column;
+                flex-direction: row;
                 justify-content: center;
                 width: 100%;
                 margin: auto;

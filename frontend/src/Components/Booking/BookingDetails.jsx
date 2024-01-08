@@ -159,7 +159,7 @@ const validateEmail = (email) => {
     setBookingCompleted(true);
 
     // history.push('/payment-options');
-    history.push(`/payment-options?tour_id=${tourIdFromURL}&amount=${amount}`);
+    history.push(`/payment-options?tour_id=${tourIdFromURL}&amount=${amount}&selectedDate=${selectedDate}&people=${numberOfPeople}`);
   }
     
   };

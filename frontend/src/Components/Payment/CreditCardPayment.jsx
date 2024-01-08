@@ -24,6 +24,8 @@ const CreditCardPayment = () => {
   const searchParams = new URLSearchParams(location.search);
   const tourIdFromURL = searchParams.get('tour_id');
    const amount = searchParams.get('amount');
+   const numberOfPeople = searchParams.get('people');
+    const selectedDate = searchParams.get('selectedDate');
   const [creditCardDetails, setCreditCardDetails] = useState({
     cardNumber: '',
     expiryDate: '',
@@ -70,7 +72,7 @@ const CreditCardPayment = () => {
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({ user_id: JSON.parse(localStorage.getItem("userInfo")).user.user_id, tour_id:tourIdFromURL }),
+            body: JSON.stringify({ user_id: JSON.parse(localStorage.getItem("userInfo")).user.user_id, tour_id:tourIdFromURL ,amount: amount,people:numberOfPeople,booking_date:selectedDate}),
         })
         .then((response) => response.json())
         .then((data) => {

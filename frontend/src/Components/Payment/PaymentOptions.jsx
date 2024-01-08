@@ -11,17 +11,19 @@ const PaymentOptions = () => {
   const searchParams = new URLSearchParams(location.search);
   const tourIdFromURL = searchParams.get('tour_id');
    const amount = searchParams.get('amount');
+    const numberOfPeople = searchParams.get('people');
+    const selectedDate = searchParams.get('selectedDate');
   const handlePayment = (method) => {
     
    
     console.log(`Payment via ${method}`);
 
     if (method === 'debit card') {
-      history.push(`/payment/debit-card?tour_id=${tourIdFromURL}&amount=${amount}`);
+      history.push(`/payment/debit-card?tour_id=${tourIdFromURL}&amount=${amount}&selectedDate=${selectedDate}&people=${numberOfPeople}`);
     } else if (method === 'credit card') {
-      history.push(`/payment/credit-card?tour_id=${tourIdFromURL}&amount=${amount}`);
+      history.push(`/payment/credit-card?tour_id=${tourIdFromURL}&amount=${amount}&selectedDate=${selectedDate}&people=${numberOfPeople}`);
     } else if (method === 'UPI') {
-      history.push(`/payment/upi?tour_id=${tourIdFromURL}&amount=${amount}`);
+      history.push(`/payment/upi?tour_id=${tourIdFromURL}&amount=${amount}&selectedDate=${selectedDate}&people=${numberOfPeople}`);
     }
   };
 

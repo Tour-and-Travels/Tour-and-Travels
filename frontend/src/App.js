@@ -10,6 +10,7 @@ import PaymentOptions from "./Components/Payment/PaymentOptions";
 import DebitCardPayment from "./Components/Payment/DebitCardPayment"; // Import your DebitCardPayment component
 import CreditCardPayment from "./Components/Payment/CreditCardPayment"; // Import your CreditCardPayment component
 import UpiPayment from "./Components/Payment/UpiPayment";
+import BookedTours from "./Components/Booking/BookedTours";
 
 const App = () => {
   return (
@@ -21,6 +22,7 @@ const App = () => {
         <Route path="/payment/upi" component={UpiPayment} />
         <Route path="/payment/credit-card" component={CreditCardPayment} />
         <Route path="/payment/debit-card" component={DebitCardPayment} />
+        <Route path="/booked-tours" component={BookedTours} />
         <Route path="/">
           <Navbar />
           <Home />
