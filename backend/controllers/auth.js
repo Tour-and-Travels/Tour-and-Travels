@@ -181,17 +181,12 @@ const userlogin = (req, res) => {
           .json({ message: "Invalid Email id or Password" });
       } else {
         const user = results[0];
-        console.log(password);
         const hashedPassword = user.password;
-        console.log(hashedPassword);
-        // const check = await bcrypt.hash(password, 8);
-        // console.log(check);
         const isMatch = await bcrypt.compare(password, hashedPassword);
         console.log(isMatch);
         if (isMatch) {
           const token = generateToken(user.user_id);
           const message = "Login is successful";
-          // res.redirect(`/?message=${message}&token=${token}`);
           return res.status(201).json({
             message: message,
             token: token,
@@ -204,4 +199,44 @@ const userlogin = (req, res) => {
     }
   );
 };
-export { register, login, userregister, userlogin };
+const userupdate = (req, res) => {
+  const userId = req.params.id;
+  const { name, email, phone_no, password } = req.body;
+  const db = mysql.createConnection({
+    host: "localhost",
+    user: "root",
+    password: "",
+    database: "tourdb",
+  });
+
+  db.query(
+    "UPDATE user SET name=?, email=?, phone_no=?, password=? WHERE user_id=?",
+    [name, email, phone_no, password, userId],
+    async (error, results) => {
+      if (error) {
+        console.log(error);
+        return res.status(500).json({ message: "Internal server error" });
+      } else {
+        return res
+          .status(200)
+          .json({ message: "User details updated successfully" });
+      }
+    }
+  );
+};
+const userread = (req, res) => {
+  const userId = req.params.id;
+  const SELECT_SINGLE_USER_QUERY = `SELECT * FROM user WHERE user_id = ?`;
+  db.query(SELECT_SINGLE_USER_QUERY, [userId], (error, results) => {
+    if (error) {
+      res.status(500).send({ message: "Error fetching tour details", error });
+    } else {
+      if (results.length === 0) {
+        res.status(404).send({ message: "User not found" });
+      } else {
+        res.status(200).json({ tour: results[0] });
+      }
+    }
+  });
+};
+export { register, login, userregister, userlogin, userupdate, userread };

@@ -1,5 +1,4 @@
-
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   Button,
   FormControl,
@@ -13,32 +12,34 @@ import {
   AlertDialogHeader,
   AlertDialogContent,
   AlertDialogOverlay,
-} from '@chakra-ui/react';
-import { useHistory } from 'react-router-dom';
-import { useLocation } from 'react-router-dom/cjs/react-router-dom.min';
+} from "@chakra-ui/react";
+import { useHistory } from "react-router-dom";
+import { useLocation } from "react-router-dom/cjs/react-router-dom.min";
 
 const DebitCardPayment = () => {
-  const [isSmallScreen] = useMediaQuery('(max-width: 400px)');
+  const [isSmallScreen] = useMediaQuery("(max-width: 400px)");
   const history = useHistory();
- const location = useLocation();
+  const location = useLocation();
 
   const searchParams = new URLSearchParams(location.search);
-  const tourIdFromURL = searchParams.get('tour_id');
-  const amount = searchParams.get('amount');
+  const tourIdFromURL = searchParams.get("tour_id");
+  const amount = searchParams.get("amount");
+  const numberOfPeople = searchParams.get("people");
+  const selectedDate = searchParams.get("selectedDate");
   const [debitCardDetails, setDebitCardDetails] = useState({
-    cardNumber: '',
-    expiryDate: '',
-    cvv: '',
-    Name: '',
-    amount: amount || '',
+    cardNumber: "",
+    expiryDate: "",
+    cvv: "",
+    Name: "",
+    amount: amount || "",
   });
 
   const [isOpen, setIsOpen] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
   const onClose = () => {
     setIsOpen(false);
-    setError('');
+    setError("");
   };
 
   const handleInputChange = (e) => {
@@ -56,38 +57,47 @@ const DebitCardPayment = () => {
       !/^\d{3}$/.test(debitCardDetails.cvv) ||
       !/^\d{2}\/\d{4}$/.test(debitCardDetails.expiryDate)
     ) {
-      setError('Please enter the details correctly.');
+      setError("Please enter the details correctly.");
       return;
     }
 
     // Handle payment processing logic here
-    console.log('Proceeding to pay via Debit Card with details:', debitCardDetails);
+    console.log(
+      "Proceeding to pay via Debit Card with details:",
+      debitCardDetails
+    );
 
     // For demonstration purposes, show a success notification
     setIsOpen(true);
     fetch("/booking/add", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ user_id: JSON.parse(localStorage.getItem("userInfo")).user.user_id, tour_id:tourIdFromURL }),
-        })
-        .then((response) => response.json())
-        .then((data) => {
-            console.log(data.message);
-        })
-        .catch((error) => {
-            console.error("Error adding booking:", error);
-        });
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        user_id: JSON.parse(localStorage.getItem("userInfo")).user.user_id,
+        tour_id: tourIdFromURL,
+        amount: amount,
+        people: numberOfPeople,
+        booking_date: selectedDate,
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data.message);
+      })
+      .catch((error) => {
+        console.error("Error adding booking:", error);
+      });
     setTimeout(() => {
-        history.push(`/payment-success?tour_id=${tourIdFromURL}`);
-      }, 1000);
+      history.push(`/payment-success?tour_id=${tourIdFromURL}`);
+    }, 1000);
   };
 
   return (
     <VStack spacing="4px">
       {error && (
-        <div style={{ color: 'red', marginBottom: '10px' }}>{error}</div>
+        <div style={{ color: "red", marginBottom: "10px" }}>{error}</div>
       )}
 
       <FormControl id="cardNumber" isRequired mb="3">
@@ -143,12 +153,12 @@ const DebitCardPayment = () => {
         bg="black"
         color="white"
         _hover={{
-          boxShadow: 'none',
-          transition: 'none',
+          boxShadow: "none",
+          transition: "none",
         }}
         onClick={handleProceedToPay}
-        fontSize={isSmallScreen ? '15px' : '18px'}
-        width={isSmallScreen ? '85%' : '70%'}
+        fontSize={isSmallScreen ? "15px" : "18px"}
+        width={isSmallScreen ? "85%" : "70%"}
       >
         Proceed to Payment
       </Button>
@@ -165,9 +175,7 @@ const DebitCardPayment = () => {
               Payment Successful
             </AlertDialogHeader>
 
-            <AlertDialogBody>
-              Thank you for your payment!
-            </AlertDialogBody>
+            <AlertDialogBody>Thank you for your payment!</AlertDialogBody>
 
             <AlertDialogFooter>
               <Button colorScheme="green" onClick={onClose} ml={3}>

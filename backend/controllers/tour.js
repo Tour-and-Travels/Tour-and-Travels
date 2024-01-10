@@ -51,7 +51,7 @@ const touradd = (req, res) => {
 };
 
 const tourread = (req, res) => {
-  const SELECT_tourS_QUERY = `SELECT * FROM tour`;
+  const SELECT_tourS_QUERY = `SELECT * FROM tour JOIN hotel on tour.hotel_id = hotel.hotel_id`;
   db.query(SELECT_tourS_QUERY, (error, results) => {
     if (error) {
       res.status(500).send({ message: "Error fetching tours", error });

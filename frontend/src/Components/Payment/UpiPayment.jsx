@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   Button,
   FormControl,
@@ -13,95 +13,103 @@ import {
   AlertDialogHeader,
   AlertDialogContent,
   AlertDialogOverlay,
-} from '@chakra-ui/react';
-import { useHistory } from 'react-router-dom';
-import { useLocation } from 'react-router-dom';
+} from "@chakra-ui/react";
+import { useHistory } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 const UpiPayment = () => {
-    const [isSmallScreen] = useMediaQuery('(max-width: 400px)');
-    const history = useHistory();
-   const location = useLocation();
+  const [isSmallScreen] = useMediaQuery("(max-width: 400px)");
+  const history = useHistory();
+  const location = useLocation();
 
   const searchParams = new URLSearchParams(location.search);
-  const tourIdFromURL = searchParams.get('tour_id');
-   const amount = searchParams.get('amount');
-    const [upiDetails, setUpiDetails] = useState({
-      selectedUpiApp: '',
-      upiId: '',
-      amount: amount || '',
+  const tourIdFromURL = searchParams.get("tour_id");
+  const amount = searchParams.get("amount");
+  const numberOfPeople = searchParams.get("people");
+  const selectedDate = searchParams.get("selectedDate");
+  const [upiDetails, setUpiDetails] = useState({
+    selectedUpiApp: "",
+    upiId: "",
+    amount: amount || "",
+  });
+
+  const [isOpen, setIsOpen] = useState(false);
+  const onClose = () => setIsOpen(false);
+  const cancelRef = React.useRef();
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setUpiDetails({
+      ...upiDetails,
+      [name]: value,
     });
-  
-    const [isOpen, setIsOpen] = useState(false);
-    const onClose = () => setIsOpen(false);
-    const cancelRef = React.useRef();
+  };
 
-    const handleInputChange = (e) => {
-      const { name, value } = e.target;
-      setUpiDetails({
-        ...upiDetails,
-        [name]: value,
+  const handleProceedToPay = () => {
+    // Validate UPI details before proceeding to pay
+    if (!upiDetails.selectedUpiApp || !upiDetails.upiId) {
+      alert("Please fill in all the required UPI details.");
+      return;
+    }
+
+    // Handle payment processing logic here
+    console.log("Proceeding to pay via UPI with details:", upiDetails);
+
+    // For demonstration purposes, redirect to a success page
+    setIsOpen(true);
+    fetch("/booking/add", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        user_id: JSON.parse(localStorage.getItem("userInfo")).user.user_id,
+        tour_id: tourIdFromURL,
+        amount: amount,
+        people: numberOfPeople,
+        booking_date: selectedDate,
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data.message);
+      })
+      .catch((error) => {
+        console.error("Error adding booking:", error);
       });
-    };
-  
-    const handleProceedToPay = () => {
-      // Validate UPI details before proceeding to pay
-      if (!upiDetails.selectedUpiApp || !upiDetails.upiId) {
-        alert('Please fill in all the required UPI details.');
-        return;
-      }
-  
-      // Handle payment processing logic here
-      console.log('Proceeding to pay via UPI with details:', upiDetails);
-  
-      // For demonstration purposes, redirect to a success page
-      setIsOpen(true);
-      fetch("/booking/add", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ user_id: JSON.parse(localStorage.getItem("userInfo")).user.user_id, tour_id:tourIdFromURL }),
-        })
-        .then((response) => response.json())
-        .then((data) => {
-            console.log(data.message);
-        })
-        .catch((error) => {
-            console.error("Error adding booking:", error);
-        });
     setTimeout(() => {
-        history.push(`/payment-success?tour_id=${tourIdFromURL}`);
-      }, 1000);
-    };
-  
-    return (
-      <VStack spacing="4px">
-        <FormControl id="selectedUpiApp" isRequired mb="3">
-          <FormLabel>Select UPI App</FormLabel>
-          <Select
-            placeholder="Select UPI App"
-            name="selectedUpiApp"
-            value={upiDetails.selectedUpiApp}
-            onChange={handleInputChange}
-          >
-            <option value="google-pay">Google Pay</option>
-            <option value="phonepe">PhonePe</option>
-            <option value="paytm">Paytm</option>
-            {/* Add more UPI apps as needed */}
-          </Select>
-        </FormControl>
-  
-        <FormControl id="upiId" isRequired mb="3">
-          <FormLabel>Enter UPI ID</FormLabel>
-          <Input
-            placeholder="Enter UPI ID"
-            name="upiId"
-            value={upiDetails.upiId}
-            onChange={handleInputChange}
-          />
-        </FormControl>
+      history.push(`/payment-success?tour_id=${tourIdFromURL}`);
+    }, 1000);
+  };
 
-        <FormControl id="prepopulatedAmount" isRequired mb="3">
+  return (
+    <VStack spacing="4px">
+      <FormControl id="selectedUpiApp" isRequired mb="3">
+        <FormLabel>Select UPI App</FormLabel>
+        <Select
+          placeholder="Select UPI App"
+          name="selectedUpiApp"
+          value={upiDetails.selectedUpiApp}
+          onChange={handleInputChange}
+        >
+          <option value="google-pay">Google Pay</option>
+          <option value="phonepe">PhonePe</option>
+          <option value="paytm">Paytm</option>
+          {/* Add more UPI apps as needed */}
+        </Select>
+      </FormControl>
+
+      <FormControl id="upiId" isRequired mb="3">
+        <FormLabel>Enter UPI ID</FormLabel>
+        <Input
+          placeholder="Enter UPI ID"
+          name="upiId"
+          value={upiDetails.upiId}
+          onChange={handleInputChange}
+        />
+      </FormControl>
+
+      <FormControl id="prepopulatedAmount" isRequired mb="3">
         <FormLabel>Amount</FormLabel>
         <Input
           placeholder="Amount"
@@ -110,22 +118,22 @@ const UpiPayment = () => {
           readOnly
         />
       </FormControl>
-  
-        <Button
-          bg="black"
-          color="white"
-          _hover={{
-            boxShadow: 'none',
-            transition: 'none',
-          }}
-          onClick={handleProceedToPay}
-          fontSize={isSmallScreen ? '15px' : '18px'}
-          width={isSmallScreen ? '85%' : '70%'}
-        >
-          Proceed to Pay
-        </Button>
 
-        <AlertDialog
+      <Button
+        bg="black"
+        color="white"
+        _hover={{
+          boxShadow: "none",
+          transition: "none",
+        }}
+        onClick={handleProceedToPay}
+        fontSize={isSmallScreen ? "15px" : "18px"}
+        width={isSmallScreen ? "85%" : "70%"}
+      >
+        Proceed to Pay
+      </Button>
+
+      <AlertDialog
         isOpen={isOpen}
         leastDestructiveRef={cancelRef}
         onClose={onClose}
@@ -136,9 +144,7 @@ const UpiPayment = () => {
               Payment Successful
             </AlertDialogHeader>
 
-            <AlertDialogBody>
-              Thank you for your payment!
-            </AlertDialogBody>
+            <AlertDialogBody>Thank you for your payment!</AlertDialogBody>
 
             <AlertDialogFooter>
               <Button ref={cancelRef} onClick={onClose}>
@@ -148,10 +154,8 @@ const UpiPayment = () => {
           </AlertDialogContent>
         </AlertDialogOverlay>
       </AlertDialog>
-
-      </VStack>
-    );
-  };
-  
+    </VStack>
+  );
+};
 
 export default UpiPayment;

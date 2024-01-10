@@ -22,6 +22,7 @@ const bookingadd = (req, res) => {
   );
 };
 const bookingread = (req, res) => {
+  const userId = req.params.id;
   const SELECT_BOOKING_QUERY = `SELECT * FROM booking where user_id = ?`;
   db.query(SELECT_BOOKING_QUERY, [userId], (error, results) => {
     if (error) {

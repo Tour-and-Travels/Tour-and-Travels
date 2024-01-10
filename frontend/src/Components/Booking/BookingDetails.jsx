@@ -1,38 +1,36 @@
 // BookingDetails.jsx
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 import {
   Button,
   FormControl,
   FormLabel,
   Input,
-  Select,
   VStack,
   useMediaQuery,
   useToast,
-} from '@chakra-ui/react';
-import { useHistory } from 'react-router-dom';
-import PaymentPage from '../Payment/PaymentPage';
-import { useLocation } from 'react-router-dom';
+} from "@chakra-ui/react";
+import { useHistory } from "react-router-dom";
+import PaymentPage from "../Payment/PaymentPage";
+import { useLocation } from "react-router-dom";
 
 const BookingDetails = () => {
-  const [isSmallScreen] = useMediaQuery('(max-width: 400px)');
+  const [isSmallScreen] = useMediaQuery("(max-width: 400px)");
   const history = useHistory();
   const location = useLocation();
- const toast = useToast();
+  const toast = useToast();
   // Retrieve tour_id from the URL
   const searchParams = new URLSearchParams(location.search);
-  const tourIdFromURL = searchParams.get('tour_id');
+  const tourIdFromURL = searchParams.get("tour_id");
   const [bookingDetails, setBookingDetails] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    numberOfPeople: '',
-    selectedDate: '',
-   
+    name: "",
+    email: "",
+    phone: "",
+    numberOfPeople: "",
+    selectedDate: "",
   });
-const [bookingCompleted, setBookingCompleted] = useState(false);
-const [tourDetails, setTourDetails] = useState(null); // State to store tour details
-const validateEmail = (email) => {
+  const [bookingCompleted, setBookingCompleted] = useState(false);
+  const [tourDetails, setTourDetails] = useState(null); // State to store tour details
+  const validateEmail = (email) => {
     // Basic email validation using a regular expression
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
@@ -52,10 +50,10 @@ const validateEmail = (email) => {
           setTourDetails(data.tour); // Set the fetched tour details to state
           console.log(data.tour);
         } else {
-          throw new Error('Failed to fetch tour details');
+          throw new Error("Failed to fetch tour details");
         }
       } catch (error) {
-        console.error('Error fetching tour details:', error);
+        console.error("Error fetching tour details:", error);
         // Handle error - display a message or retry logic
       }
     };
@@ -71,12 +69,17 @@ const validateEmail = (email) => {
   };
 
   const handleSubmit = () => {
-   
-    if (!bookingDetails.name || !bookingDetails.email || !bookingDetails.phone || !bookingDetails.numberOfPeople || !bookingDetails.selectedDate) {
+    if (
+      !bookingDetails.name ||
+      !bookingDetails.email ||
+      !bookingDetails.phone ||
+      !bookingDetails.numberOfPeople ||
+      !bookingDetails.selectedDate
+    ) {
       toast({
-        title: 'Error',
-        description: 'Please fill in all the required fields correctly.',
-        status: 'error',
+        title: "Error",
+        description: "Please fill in all the required fields correctly.",
+        status: "error",
         duration: 1000,
         isClosable: true,
       });
@@ -84,9 +87,9 @@ const validateEmail = (email) => {
     }
     if (!validateEmail(bookingDetails.email)) {
       toast({
-        title: 'Error',
-        description: 'Please enter a valid email.',
-        status: 'error',
+        title: "Error",
+        description: "Please enter a valid email.",
+        status: "error",
         duration: 1000,
         isClosable: true,
       });
@@ -95,78 +98,72 @@ const validateEmail = (email) => {
 
     if (!isPhoneNumberValid(bookingDetails.phone)) {
       toast({
-        title: 'Error',
-        description: 'Please enter a valid phone number with 10 digits.',
-        status: 'error',
+        title: "Error",
+        description: "Please enter a valid phone number with 10 digits.",
+        status: "error",
         duration: 1000,
         isClosable: true,
       });
       return;
     }
     if (tourDetails) {
-    const {
-      Price,
-      maximum_occupancy,
-      Starting_date,
-      Ending_date,
-    } = tourDetails;
+      const { Price, maximum_occupancy, Starting_date, Ending_date } =
+        tourDetails;
 
-    const numberOfPeople = parseInt(bookingDetails.numberOfPeople);
-    const selectedDate = new Date(bookingDetails.selectedDate);
+      const numberOfPeople = parseInt(bookingDetails.numberOfPeople);
+      const selectedDate = new Date(bookingDetails.selectedDate)
+        .toISOString()
+        .split("T")[0];
 
-    // Calculate total amount
-    const amount = Price * numberOfPeople;
+      // Calculate total amount
+      const amount = Price * numberOfPeople;
 
-    // Check if the number of people is within the maximum occupancy limit
-    if (numberOfPeople > maximum_occupancy) {
-      toast({
-        title: 'Error',
-        description: `Number of people exceeds maximum occupancy (${maximum_occupancy}).`,
-        status: 'error',
-        duration: 1000,
-        isClosable: true,
+      // Check if the number of people is within the maximum occupancy limit
+      if (numberOfPeople > maximum_occupancy) {
+        toast({
+          title: "Error",
+          description: `Number of people exceeds maximum occupancy (${maximum_occupancy}).`,
+          status: "error",
+          duration: 1000,
+          isClosable: true,
+        });
+        return;
+      }
+
+      // Check if the selected date is within the tour date range
+      const startDate = new Date(Starting_date);
+      const endDate = new Date(Ending_date);
+      if (selectedDate < startDate || selectedDate > endDate) {
+        toast({
+          title: "Error",
+          description: "Selected date is not within the tour date range.",
+          status: "error",
+          duration: 1000,
+          isClosable: true,
+        });
+        return;
+      }
+
+      console.log("Booking Details submitted:", bookingDetails);
+
+      setBookingDetails({
+        name: "",
+        email: "",
+        phone: "",
+        numberOfPeople: "",
+        selectedDate: "",
       });
-      return;
+
+      setBookingCompleted(true);
+
+      // history.push('/payment-options');
+      history.push(
+        `/payment-options?tour_id=${tourIdFromURL}&amount=${amount}&selectedDate=${selectedDate}&people=${numberOfPeople}`
+      );
     }
-
-    // Check if the selected date is within the tour date range
-    const startDate = new Date(Starting_date);
-    const endDate = new Date(Ending_date);
-    if (selectedDate < startDate || selectedDate > endDate) {
-      toast({
-        title: 'Error',
-        description: 'Selected date is not within the tour date range.',
-        status: 'error',
-        duration: 1000,
-        isClosable: true,
-      });
-      return;
-    }
-  
-    console.log('Booking Details submitted:', bookingDetails);
-    
-
-
-    setBookingDetails({
-      name: '',
-      email: '',
-      phone: '',
-      numberOfPeople: '',
-      selectedDate: '',
-      
-    });
-
-    setBookingCompleted(true);
-
-    // history.push('/payment-options');
-    history.push(`/payment-options?tour_id=${tourIdFromURL}&amount=${amount}&selectedDate=${selectedDate}&people=${numberOfPeople}`);
-  }
-    
   };
 
   return (
-    
-
     <VStack spacing="4px">
       <FormControl id="name" isRequired mb="3">
         <FormLabel>Name</FormLabel>
@@ -225,12 +222,12 @@ const validateEmail = (email) => {
         bg="black"
         color="white"
         _hover={{
-          boxShadow: 'none',
-          transition: 'none',
+          boxShadow: "none",
+          transition: "none",
         }}
         onClick={handleSubmit}
-        fontSize={isSmallScreen ? '15px' : '18px'}
-        width={isSmallScreen ? '85%' : '70%'}
+        fontSize={isSmallScreen ? "15px" : "18px"}
+        width={isSmallScreen ? "85%" : "70%"}
       >
         Continue to Payment
       </Button>
