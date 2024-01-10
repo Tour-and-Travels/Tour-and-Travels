@@ -1,25 +1,22 @@
 import React, { useEffect, useState } from "react";
-// import { useHistory } from "react-router-dom";
-// import {
-//   HiOutlineClipboardCheck,
-//   HiOutlineLocationMarker,
-// } from "react-icons/hi";
+
 const BookedTours = () => {
-  // const history = useHistory();
   const [bookedTours, setBookedTours] = useState([]);
   const user = JSON.parse(localStorage.getItem("userInfo")).user;
   console.log(user.user_id);
-
+  const fetchBooking = (userId) => {
+    fetch(`/booking/${userId}`)
+      .then((response) => response.json())
+      .then((data) => {
+        const booking = data.booking;
+        setBookedTours(booking);
+        console.log(booking);
+      })
+      .catch((error) => console.error("Error fetching booked tours:", error));
+  };
   useEffect(() => {
     if (user) {
-      fetch(`/booking/${user.user_id}`)
-        .then((response) => response.json())
-        .then((data) => {
-          const booking = data.booking;
-          setBookedTours(booking);
-          console.log(booking);
-        })
-        .catch((error) => console.error("Error fetching booked tours:", error));
+      fetchBooking(user.user_id);
     } else {
       console.error("User information not available");
     }

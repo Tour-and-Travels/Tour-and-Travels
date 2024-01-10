@@ -6,76 +6,6 @@ import { TbGridDots } from "react-icons/tb";
 import { useHistory } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { useMediaQuery } from "@chakra-ui/react";
-// const Navbar = () => {
-//   const [active, setActive] = useState('navBar');
-//   const history = useHistory();
-
-//   const showNav = () => {
-//     setActive('navBar activeNavbar');
-//   };
-
-//   const removeNavbar = () => {
-//     setActive('navBar');
-//   };
-//  const user = JSON.parse(localStorage.getItem('userInfo'));
-//   const logoutHandler = () => {
-//     localStorage.removeItem('userInfo');
-//     history.push('/');
-//     window.location.reload();
-//   };
-
-//   return (
-//     <section className="navBarSection">
-//       <header className="header flex">
-//         <div className="logoDiv">
-//           <a href="#" className="logo flex">
-//             <h1>
-//               <MdOutlineTravelExplore className="icon" />Travel
-//             </h1>
-//           </a>
-//         </div>
-
-//         <div className={active}>
-//           <ul className="navLists horizontal">
-//             <li className="navItem">
-//               <a href="/" className="navLink">
-//                 Home
-//               </a>
-//             </li>
-//             {user ? (
-//               <li className="navItem">
-//             <Link to="/booked-tours" className="navLink">
-//               Packages
-//             </Link>
-//           </li>
-//             ) : (
-//               <div></div>
-//             )}
-//             {user ? (
-//               <button className="btn" onClick={logoutHandler}>
-//                 Logout
-//               </button>
-//             ) : (
-//               <button className="btn" onClick={() => history.push('/login')}>
-//                 Login/Register
-//               </button>
-//             )}
-
-//             <div onClick={removeNavbar} className="closeNavbar">
-//               <AiFillCloseCircle className="icon" />
-//             </div>
-//           </ul>
-//         </div>
-
-//         <div onClick={showNav} className="toggleNavBar">
-//           <TbGridDots className="icon" />
-//         </div>
-//       </header>
-//     </section>
-//   );
-// };
-
-// export default Navbar;
 
 const Navbar = () => {
   const [isActive, setIsActive] = useState(false);
@@ -112,15 +42,15 @@ const Navbar = () => {
         </div>
         <ul className={isActive ? "nav-links active" : "nav-links"}>
           <li>
-            <a href="/">Home</a>
+            <Link to="/">Home</Link>
           </li>
           {user && (
             <li>
-              <a href="/booked-tours">My Bookings</a>
+              <Link to="/booked-tours">My Bookings</Link>
             </li>
           )}
           <li>
-            <a href="#">About</a>
+            <Link to="#">About</Link>
           </li>
           <li>
             {user ? (
@@ -135,7 +65,7 @@ const Navbar = () => {
           </li>
           {user && (
             <li>
-              <a href="/profile">My Profile</a>
+              <Link to="/profile">My Profile</Link>
             </li>
           )}
         </ul>

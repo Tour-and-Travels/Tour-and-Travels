@@ -24,6 +24,8 @@ const Signup = () => {
   const [confirmpassword, setConfirmpassword] = useState();
   const [password, setPassword] = useState();
   const [phone_no, setPhone_no] = useState();
+  const [image, setImage] = useState();
+  const [selectedFileName, setSelectedFileName] = useState();
   const [loading, setLoading] = useState(false);
   const toast = useToast();
   const history = useHistory();
@@ -48,6 +50,50 @@ const Signup = () => {
   const validatePasswordCharacter = (password) => {
     const specialCharacterRegex = /[!@#$%^&*()_+{}\[\]:;<>,.?~\\-]/;
     return specialCharacterRegex.test(password);
+  };
+  const handleFileSelect = (event) => {
+    const photo = event.target.files[0];
+    if (photo) {
+      setSelectedFileName(photo.name);
+      setImage(photo);
+      // console.log(image);
+    } else {
+      setSelectedFileName("");
+      setImage(null);
+    }
+  };
+  const picUpload = (photo) => {
+    setLoading(true);
+    if (photo === undefined) {
+      toast({
+        title: "Please Select an Image",
+        status: "warning",
+        duration: 2000,
+        isClosable: true,
+        position: "bottom",
+      });
+      return;
+    }
+    if (
+      photo.type === "image/jpeg" ||
+      photo.type === "image/png" ||
+      photo.type === "image.jpg"
+    ) {
+      const imagedata = new FormData();
+      imagedata.append("image", photo);
+      setImage(imagedata);
+      console.log(imagedata);
+    } else {
+      toast({
+        title: "Please Select an Image",
+        status: "warning",
+        duration: 2000,
+        isClosable: true,
+        position: "bottom",
+      });
+      setLoading(false);
+      return;
+    }
   };
 
   const submitHandler = async () => {
@@ -120,17 +166,34 @@ const Signup = () => {
       setLoading(false);
       return;
     }
+    console.log(image);
+    const formData = new FormData();
+    formData.append("name", name);
+    formData.append("email", email);
+    formData.append("password", password);
+    formData.append("phone_no", phone_no);
+    if (image) {
+      formData.append("image", image); // Assuming your image field name is "image"
+    } else {
+      formData.append("image", "");
+    }
     try {
+      // const config = {
+      //   headers: {
+      //     "Content-type": "application/json",
+      //   },
+      // };
+      // const { data } = await axios.post(
+      //   "/auth/userregister",
+      //   { name, email, password, phone_no, image },
+      //   config
+      // );
       const config = {
         headers: {
-          "Content-type": "application/json",
+          "Content-type": "multipart/form-data", // Set the correct content type for FormData
         },
       };
-      const { data } = await axios.post(
-        "/auth/userregister",
-        { name, email, password, phone_no },
-        config
-      );
+      const { data } = await axios.post("/auth/userregister", formData, config);
       console.log(data);
       toast({
         title: "Registration is successful",
@@ -232,6 +295,35 @@ const Signup = () => {
           placeholder="Enter Your Phone Number"
           onChange={(event) => setPhone_no(event.target.value)}
         />
+      </FormControl>
+      <FormLabel alignSelf="start">Upload Your Profile Photo</FormLabel>
+      <FormControl
+        id="pic"
+        mb="3"
+        borderColor="black"
+        borderWidth="1px"
+        borderRadius="md"
+        p="3"
+      >
+        <label htmlFor="file-upload" style={{ cursor: "pointer" }}>
+          <input
+            id="file-upload"
+            type="file"
+            accept="image/*"
+            style={{ display: "none" }}
+            onChange={handleFileSelect}
+          />
+
+          <HStack spacing="2" alignItems="center">
+            <AttachmentIcon />
+            {/* <FormLabel>Upload Your Profile Photo</FormLabel> */}
+          </HStack>
+        </label>
+        {selectedFileName && (
+          <Text fontSize="sm" color="black">
+            {selectedFileName}
+          </Text>
+        )}
       </FormControl>
       <Button
         bg="black"

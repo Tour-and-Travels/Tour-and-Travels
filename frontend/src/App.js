@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import "./app.css";
 import Navbar from "./Components/Navbar/Navbar";
 import LoginPage from "./Components/ProfileManagement/LoginPage.js";
@@ -7,8 +7,8 @@ import BookingPage from "./Components/Booking/BookingPage";
 import Home from "./Components/Home/Home";
 import Main from "./Components/Main/Main";
 import PaymentOptions from "./Components/Payment/PaymentOptions";
-import DebitCardPayment from "./Components/Payment/DebitCardPayment"; // Import your DebitCardPayment component
-import CreditCardPayment from "./Components/Payment/CreditCardPayment"; // Import your CreditCardPayment component
+import DebitCardPayment from "./Components/Payment/DebitCardPayment";
+import CreditCardPayment from "./Components/Payment/CreditCardPayment";
 import UpiPayment from "./Components/Payment/UpiPayment";
 import BookedTours from "./Components/Booking/BookedTours";
 import ProfilePage from "./Components/ProfileManagement/ProfilePage.js";
@@ -22,8 +22,8 @@ const App = () => {
     <Router>
       {shouldShowNavbar && <Navbar />}
       <Switch>
-        <Route path="/booking-details" component={BookingPage} />
         <Route path="/login" component={LoginPage} />
+        <Route path="/booking-details" component={BookingPage} />
         <Route path="/payment-options" component={PaymentOptions} />
         <Route path="/payment/upi" component={UpiPayment} />
         <Route path="/payment/credit-card" component={CreditCardPayment} />
