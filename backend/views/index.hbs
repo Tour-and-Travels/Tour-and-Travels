@@ -49,9 +49,9 @@
                     </tbody>
                 </table>
             </div>
-        <div id="tour-packages-section" class="mt-5">
+        <div id="tour-packages-section" class="mt-2">
             <h2>Tour List</h2>
-            <form id="addTourPackageForm" class="mb-4" enctype="multipart/form-data">
+            <form id="addTourPackageForm" class="mb-4" >
                 <div class="row">
                     <div class="col-md-2 mb-3">
                         <label for="hotelDropdown" class="form-label mb-0">Select Hotel</label>
@@ -67,19 +67,19 @@
                             <option value="Cultural">Cultural</option>
                         </select>
                     </div>
-                    <div class="col-md-4 mb-3 mt-4">
+                    <div class="col-md-2 mb-3 mt-4">
                         <input type="text" id="tourDescription" class="form-control" placeholder="Description" required>
                     </div>
                     <div class="col-md-2 mb-3 mt-4">
                         <input type="number" id="tourPrice" class="form-control" placeholder="Price" required>
                     </div>
-                    <div class="col-md-4 mb-3 mt-4">
+                    <div class="col-md-2 mb-3 mt-4">
                         <input type="text" id="tourTagline" class="form-control" placeholder="Tagline" required>
                     </div>
                     <div class="col-md-2 mb-3 mt-4">
                         <input type="text" id="tourDuration" class="form-control" placeholder="Duration" required>
                     </div>
-                    <div class="col-md-4 mb-3 mt-4">
+                    <div class="col-md-2 mb-3 mt-4">
                         <input type="number" id="tourmaximum_occupancy" class="form-control" placeholder="Maximum occupancy" required>
                     </div>
                     <div class="col-md-2 mb-3 mt-4">
@@ -261,11 +261,11 @@
                     <td>${tour.Price}</td>
                     <td>${tour.Tagline}</td>
                     <td>${tour.Duration}</td>
-                    <td>${tour.Starting_date}</td>
-                    <td>${tour.Ending_date}</td>
+                    <td>${tour.Starting_date.split('T')[0]}</td>
+                    <td>${tour.Ending_date.split('T')[0]}</td>
                     <td>${tour.image}</td>
                     <td>
-                        <button class="btn btn-sm btn-primary" onclick="editTour(${tour.tour_id}, '${tour.hotel_id}', '${tour.category}', '${tour.description}','${tour.maximum_occupancy}', '${tour.Price}', '${tour.Tagline}', '${tour.Duration}', '${tour.Starting_date}', '${tour.Ending_date}', '${tour.image}')">Update</button>
+                        <button class="btn btn-sm btn-primary" onclick="editTour(${tour.tour_id}, '${tour.hotel_id}', '${tour.category}', '${tour.description}','${tour.maximum_occupancy}', '${tour.Price}', '${tour.Tagline}', '${tour.Duration}', '${tour.Starting_date.split('T')[0]}', '${tour.Ending_date.split('T')[0]}', '${tour.image}')">Update</button>
                         <button class="btn btn-sm btn-danger" onclick="deleteTour(${tour.tour_id})">Delete</button>
                     </td>
                     `;
@@ -338,7 +338,7 @@
     }
 
                     function updateTour(id) {
-                        const updatedHotelId = document.getElementById('editTourHotelId').value;
+                        const updatedHotelId = document.getElementById('editTourHotelId').value.split('-')[0];;
                         const updatedCategory = document.getElementById('editTourCategory').value;
                         const updatedDescription = document.getElementById('editTourDescription').value;
                         const updatedPrice = document.getElementById('editTourPrice').value;
@@ -346,9 +346,7 @@
                         const updatedDuration = document.getElementById('editTourDuration').value;
                         const updatedStartingDate = document.getElementById('editTourStartingDate').value;
                         const updatedEndingDate = document.getElementById('editTourEndingDate').value;
-
                         const updatedImage = document.getElementById('editTourImage').files[0]; // Assuming the image can be updated
-
                         const formData = new FormData();
                         formData.append("hotel_id", updatedHotelId);
                         formData.append("category", updatedCategory);
@@ -392,23 +390,23 @@
 
                 document.getElementById("addTourPackageForm").addEventListener("submit", function (e) {
                     e.preventDefault();
-                    const hotelId = document.getElementById("hotelDropdown").value;
+                    const hotelId = document.getElementById("hotelDropdown").value.split('-')[0];
                     const category = document.getElementById("categoryDropdown").value;
                     const description = document.getElementById("tourDescription").value;
-                     const maximum_occupancy = document.getElementById("tourmaximum_occupancy").value;
+                    const maximum_occupancy = document.getElementById("tourmaximum_occupancy").value;
                     const imageFile = document.getElementById("image").files[0];
                     const price = document.getElementById("tourPrice").value;
                     const tagline = document.getElementById("tourTagline").value;
                     const duration = document.getElementById("tourDuration").value;
-                    const startingDate = document.getElementById("tourStartingDate").value;
-                    const endingDate = document.getElementById("tourEndingDate").value;
+                    const startingDate = new Date(document.getElementById("tourStartingDate").value).toISOString().split('T')[0];
+                    const endingDate = new Date(document.getElementById("tourEndingDate").value).toISOString().split('T')[0];
 
                     const formData = new FormData();
 
                     formData.append("hotel_id", hotelId);
                     formData.append("category", category);
                     formData.append("description", description);
-                    formData.append("tourmaximum_occupancy", maximum_occupancy);
+                    formData.append("maximum_occupancy", maximum_occupancy);
                     formData.append("image", imageFile);
                     formData.append("Price", price); // Include 'Price'
                     formData.append("Tagline", tagline); // Include 'Tagline'

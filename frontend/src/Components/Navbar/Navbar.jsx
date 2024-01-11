@@ -1,67 +1,89 @@
-import React, { useState } from 'react';
-import './navbar.css';
-import { MdOutlineTravelExplore } from 'react-icons/md';
-import { AiFillCloseCircle } from 'react-icons/ai';
-import { TbGridDots } from 'react-icons/tb';
-import { useHistory } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import "./Navbar.css";
+import { MdOutlineTravelExplore } from "react-icons/md";
+import { AiFillCloseCircle } from "react-icons/ai";
+import { TbGridDots } from "react-icons/tb";
+import { useHistory } from "react-router-dom";
+import { Link } from "react-router-dom";
+import { useMediaQuery } from "@chakra-ui/react";
 
 const Navbar = () => {
-  const [active, setActive] = useState('navBar');
+  const [isActive, setIsActive] = useState(false);
   const history = useHistory();
-
-  const showNav = () => {
-    setActive('navBar activeNavbar');
+  const toggleMenu = () => {
+    setIsActive(!isActive);
   };
-
-  const removeNavbar = () => {
-    setActive('navBar');
-  };
- const user = JSON.parse(localStorage.getItem('userInfo'));
+  const user = JSON.parse(localStorage.getItem("userInfo"));
   const logoutHandler = () => {
-    localStorage.removeItem('userInfo');
-    history.push('/');
+    localStorage.removeItem("userInfo");
+    history.push("/");
     window.location.reload();
   };
-
+  const scrollToAbout = () => {
+    const aboutSection = document.getElementById("about");
+    if (aboutSection) {
+      aboutSection.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+  const [isSmallScreen] = useMediaQuery("(max-width: 800px)");
   return (
-    <section className="navBarSection">
-      <header className="header flex">
-        <div className="logoDiv">
-          <a href="#" className="logo flex">
+    <nav className="navbar">
+      <div
+        style={{ marginLeft: isSmallScreen ? "40%" : "45%", fontSize: "1.7em" }}
+      >
+        <h1>Trip-Trekker</h1>
+      </div>
+      <div className="container">
+        <div className="logo">
+          <a href="#">
+            {" "}
             <h1>
-              <MdOutlineTravelExplore className="icon" />Travel
+              <MdOutlineTravelExplore
+                className="icon"
+                style={{ display: "inline" }}
+              />
+              Travel{" "}
             </h1>
           </a>
         </div>
-
-        <div className={active}>
-          <ul className="navLists horizontal">
-            <li className="navItem">
-              <a href="/" className="navLink">
-                Home
-              </a>
+        <ul className={isActive ? "nav-links active" : "nav-links"}>
+          <li>
+            <Link to="/">Home</Link>
+          </li>
+          {user && (
+            <li>
+              <Link to="/booked-tours">My Bookings</Link>
             </li>
+          )}
+          <li>
+            <button className="button" onClick={scrollToAbout}>
+              About
+            </button>
+          </li>
+          <li>
             {user ? (
-              <button className="btn" onClick={logoutHandler}>
+              <button className="button" onClick={logoutHandler}>
                 Logout
               </button>
             ) : (
-              <button className="btn" onClick={() => history.push('/login')}>
+              <button className="button" onClick={() => history.push("/login")}>
                 Login/Register
               </button>
             )}
-            
-            <div onClick={removeNavbar} className="closeNavbar">
-              <AiFillCloseCircle className="icon" />
-            </div>
-          </ul>
+          </li>
+          {user && (
+            <li>
+              <Link to="/profile">My Profile</Link>
+            </li>
+          )}
+        </ul>
+        <div className="toggle-button" onClick={toggleMenu}>
+          <span></span>
+          <span></span>
+          <span></span>
         </div>
-
-        <div onClick={showNav} className="toggleNavBar">
-          <TbGridDots className="icon" />
-        </div>
-      </header>
-    </section>
+      </div>
+    </nav>
   );
 };
 

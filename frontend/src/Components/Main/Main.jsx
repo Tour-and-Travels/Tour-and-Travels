@@ -1,86 +1,145 @@
-// main.jsx
-import React, { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom';
-import './main.css'
-import { HiOutlineClipboardCheck, HiOutlineLocationMarker } from 'react-icons/hi'
-import { useLocation } from 'react-router-dom';
-import { useHistory } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import "./main.css";
+import {
+  HiOutlineClipboardCheck,
+  HiOutlineLocationMarker,
+} from "react-icons/hi";
+import { useHistory } from "react-router-dom";
 
 const Main = () => {
   const history = useHistory();
   const [tourData, setTourData] = useState([]);
- const location = useLocation();
-
-  const searchParams = new URLSearchParams(location.search);
-  const tourIdFromURL = searchParams.get('tour_id');
   useEffect(() => {
-    // Fetch tour data from the backend
-    fetch('/tour') // Replace with your backend URL
+    fetch("/tour")
       .then((response) => response.json())
       .then((data) => {
         const tours = data.tours;
         setTourData(tours);
+        console.log(tours);
       })
-      .catch((error) => console.error('Error fetching data:', error));
+      .catch((error) => console.error("Error fetching data:", error));
   }, []);
-
   const arrayBufferToBase64 = (buffer) => {
     const binary = Array.from(new Uint8Array(buffer))
       .map((byte) => String.fromCharCode(byte))
-      .join('');
+      .join("");
     return btoa(binary);
   };
-   const handleBookNowClick = (tour_id) => {
-    const user = JSON.parse(localStorage.getItem('userInfo'));
+  const [shouldRefresh, setShouldRefresh] = useState(false);
+  useEffect(() => {
+    if (shouldRefresh) {
+      // Refresh the page
+      window.location.reload();
+      // Set the state to prevent further refreshes
+      setShouldRefresh(false);
+    }
+  }, [shouldRefresh]);
+  const handleBookNowClick = (tour_id) => {
+    const user = JSON.parse(localStorage.getItem("userInfo"));
     if (user) {
-      history.push(`/booking-details?tour_id=${tour_id}`);
+      setTimeout(() => {
+        setShouldRefresh(true);
+        history.push(`/booking-details?tour_id=${tour_id}`);
+      }, 1000);
     } else {
-      localStorage.setItem('intendedUrl', `/booking-details?tour_id=${tour_id}`);
-      history.push('/login');
+      localStorage.setItem(
+        "intendedUrl",
+        `/booking-details?tour_id=${tour_id}`
+      );
+      history.push("/login");
     }
   };
 
-
   return (
-    <section className="main container section">
-      <div className="secTitle">
-        <h3 className="title">Most visited destinations</h3>
+    <section className="main section">
+      <div>
+        <h2
+          style={{ fontWeight: "900", fontSize: "1.5em", marginBottom: "5px" }}
+        >
+          Most visited destinations
+        </h2>
       </div>
-
       <div className="secContent">
-        {tourData.map(({ tour_id, image, category, hotel_id, description, Tagline,maximum_occupancy, Price, Duration, Starting_date, Ending_date }) => {
-          const imageUrl = `data:image/jpeg;base64,${arrayBufferToBase64(image.data)}`;
-          const bookNowLink = `/booking-details?tour_id=${tour_id}`; 
-          return (
-            <div key={tour_id} className="singleDestination">
-              <div className="imageDiv">
-                <img src={imageUrl} alt={image.data} />
-              </div>
-
-              <div className="cardInfo">
-                <h4 className="destTitle">{category}</h4>
-                <div className="continent">
-                  <HiOutlineLocationMarker className="icon" />
-                  <span className="name">{hotel_id}</span>
+        {tourData.map(
+          ({
+            tour_id,
+            image,
+            category,
+            hotel_id,
+            description,
+            Tagline,
+            maximum_occupancy,
+            Price,
+            Duration,
+            Starting_date,
+            Ending_date,
+            hotel_name,
+            location,
+          }) => {
+            const imageUrl = `data:image/jpeg;base64,${arrayBufferToBase64(
+              image.data
+            )}`;
+            // const bookNowLink = `/booking-details?tour_id=${tour_id}`;
+            return (
+              <div key={tour_id} className="singleDestination">
+                <div className="imageDiv">
+                  <img src={imageUrl} alt={image.data} />
                 </div>
 
-                <div className="desc">
-                  <p>{description}</p>
-                  <p>{Tagline}</p>
-                  <p>Maximum Occupancy: {maximum_occupancy}</p>
-                  <p>Price per person: {Price}</p>
-                  <p>Duration: {Duration}</p>
-                  <p>Starting Date: {Starting_date}</p>
-                  <p>Ending Date: {Ending_date}</p>
+                <div className="cardInfo">
+                  <h4 className="destTitle">{category}</h4>
+                  <div className="continent">
+                    <h2>
+                      <strong>{description.split(".")[0]}</strong>
+                    </h2>
+                    <h4>
+                      <i>
+                        <strong>"{Tagline}"</strong>
+                      </i>
+                    </h4>
+                    <span className="name" style={{ fontWeight: "600" }}>
+                      Hotel id: {hotel_id}
+                      <p style={{ fontWeight: "600" }}>
+                        Hotel name: {hotel_name}
+                      </p>
+                      <p style={{ fontWeight: "600" }}>
+                        Location:{" "}
+                        <HiOutlineLocationMarker
+                          className="icon"
+                          style={{ display: "inline", fontSize: "1.2em" }}
+                        />{" "}
+                        {location}
+                      </p>
+                    </span>
+                  </div>
+
+                  <div className="desc">
+                    <p>
+                      <i style={{ fontWeight: "600" }}>
+                        {description.split(".").slice(1).join("\n")}
+                      </i>
+                    </p>
+                    <p>Maximum Occupancy: {maximum_occupancy}</p>
+                    <p>
+                      Price per person: {"\u20B9"}
+                      {Price}
+                    </p>
+                    <p>Duration: {Duration}</p>
+                    <p>Available from: {Starting_date.split("T")[0]}</p>
+                    <p>Available Upto: {Ending_date.split("T")[0]}</p>
+                  </div>
+                  <button
+                    className="btn flex"
+                    onClick={() => handleBookNowClick(tour_id)}
+                  >
+                    BOOK NOW
+                    <HiOutlineClipboardCheck className="icon" />
+                  </button>
                 </div>
-                 <button className="btn flex" onClick={() => handleBookNowClick(tour_id)}>
-                  BOOK NOW
-                  <HiOutlineClipboardCheck className="icon" />
-                </button>
               </div>
-            </div>
-          );
-        })}
+            );
+          }
+        )}
       </div>
     </section>
   );
