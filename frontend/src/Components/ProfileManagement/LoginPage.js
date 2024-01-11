@@ -28,7 +28,7 @@ const LoginPage = () => {
         style={{
           width: "50%",
           height: "100%",
-          marginLeft: "25%",
+          margin: "2px auto",
         }}
       >
         <Box
@@ -42,11 +42,7 @@ const LoginPage = () => {
           borderWidth="1px"
           boxShadow="outline"
         >
-          <Text
-            // fontFamily="Libre Baskerville"
-            fontSize="2xl"
-            textAlign="center"
-          >
+          <Text fontSize="2xl" textAlign="center">
             Tour and Travels
           </Text>
         </Box>

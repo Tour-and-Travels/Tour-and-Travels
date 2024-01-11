@@ -252,8 +252,8 @@ const ProfileContent = () => {
               boxShadow: "none",
               transition: "none",
             }}
-            fontSize={isSmallScreen ? "16px" : "18px"}
-            width={isSmallScreen ? "50%" : "30%"}
+            fontSize={isSmallScreen ? "10px" : "18px"}
+            width={isSmallScreen ? "60%" : "70%"}
             onClick={handleClickPasswordChange}
           >
             Change Password
@@ -270,10 +270,9 @@ const ProfileContent = () => {
             />
           </InputGroup>
         </div>
-        <div style={{ display: "inline" }}>
+        <div style={{ display: "flex", justifyContent: "space-around" }}>
           <Button
             mb="1"
-            ml="10%"
             bg="#1eff00a3"
             _hover={{
               boxShadow: "none",
@@ -288,7 +287,6 @@ const ProfileContent = () => {
           </Button>
           <Button
             mb="1"
-            ml="10%"
             bg="#ff0000"
             _hover={{
               boxShadow: "none",

@@ -13,7 +13,7 @@ import UpiPayment from "./Components/Payment/UpiPayment";
 import BookedTours from "./Components/Booking/BookedTours";
 import ProfilePage from "./Components/ProfileManagement/ProfilePage.js";
 import { useLocation } from "react-router-dom";
-
+import Footer from "./Components/Footer/Footer.js";
 const App = () => {
   const location = useLocation();
   const showNavbarRoutes = ["/", "/login", "/booked-tours", "/profile"];
@@ -33,6 +33,7 @@ const App = () => {
         <Route path="/">
           <Home />
           <Main />
+          <Footer />
         </Route>
       </Switch>
     </Router>

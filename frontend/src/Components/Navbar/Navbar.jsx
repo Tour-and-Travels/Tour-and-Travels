@@ -19,6 +19,12 @@ const Navbar = () => {
     history.push("/");
     window.location.reload();
   };
+  const scrollToAbout = () => {
+    const aboutSection = document.getElementById("about");
+    if (aboutSection) {
+      aboutSection.scrollIntoView({ behavior: "smooth" });
+    }
+  };
   const [isSmallScreen] = useMediaQuery("(max-width: 800px)");
   return (
     <nav className="navbar">
@@ -50,7 +56,9 @@ const Navbar = () => {
             </li>
           )}
           <li>
-            <Link to="#">About</Link>
+            <button className="button" onClick={scrollToAbout}>
+              About
+            </button>
           </li>
           <li>
             {user ? (
@@ -58,7 +66,7 @@ const Navbar = () => {
                 Logout
               </button>
             ) : (
-              <button onClick={() => history.push("/login")}>
+              <button className="button" onClick={() => history.push("/login")}>
                 Login/Register
               </button>
             )}
