@@ -3,13 +3,14 @@ import "./Navbar.css";
 import { MdOutlineTravelExplore } from "react-icons/md";
 import { AiFillCloseCircle } from "react-icons/ai";
 import { TbGridDots } from "react-icons/tb";
-import { useHistory } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { useMediaQuery } from "@chakra-ui/react";
 
 const Navbar = () => {
   const [isActive, setIsActive] = useState(false);
   const history = useHistory();
+  const location = useLocation();
   const toggleMenu = () => {
     setIsActive(!isActive);
   };
@@ -19,6 +20,7 @@ const Navbar = () => {
     history.push("/");
     window.location.reload();
   };
+  const isHomePage = location.pathname === "/";
   const scrollToAbout = () => {
     const aboutSection = document.getElementById("about");
     if (aboutSection) {
@@ -55,11 +57,13 @@ const Navbar = () => {
               <Link to="/booked-tours">My Bookings</Link>
             </li>
           )}
-          <li>
-            <button className="button" onClick={scrollToAbout}>
-              About
-            </button>
-          </li>
+          {isHomePage && (
+            <li>
+              <button className="button" onClick={scrollToAbout}>
+                About
+              </button>
+            </li>
+          )}
           <li>
             {user ? (
               <button className="button" onClick={logoutHandler}>

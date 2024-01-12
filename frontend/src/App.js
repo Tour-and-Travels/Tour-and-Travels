@@ -14,6 +14,7 @@ import BookedTours from "./Components/Booking/BookedTours";
 import ProfilePage from "./Components/ProfileManagement/ProfilePage.js";
 import { useLocation } from "react-router-dom";
 import Footer from "./Components/Footer/Footer.js";
+import UpdateBookingPage from "./Components/Booking/UpdateBookingPage.js";
 const App = () => {
   const location = useLocation();
   const showNavbarRoutes = ["/", "/login", "/booked-tours", "/profile"];
@@ -29,6 +30,7 @@ const App = () => {
         <Route path="/payment/credit-card" component={CreditCardPayment} />
         <Route path="/payment/debit-card" component={DebitCardPayment} />
         <Route path="/booked-tours" component={BookedTours} />
+        <Route path="/update-booking" component={UpdateBookingPage} />
         <Route path="/profile" component={ProfilePage} />
         <Route path="/">
           <Home />

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Button,
   FormControl,
@@ -27,6 +27,9 @@ const UpiPayment = () => {
   const amount = searchParams.get("amount");
   const numberOfPeople = searchParams.get("people");
   const selectedDate = searchParams.get("selectedDate");
+  const name = searchParams.get("name");
+  const email = searchParams.get("email");
+  const phone_no = searchParams.get("phone_no");
   const [upiDetails, setUpiDetails] = useState({
     selectedUpiApp: "",
     upiId: "",
@@ -44,7 +47,13 @@ const UpiPayment = () => {
       [name]: value,
     });
   };
-
+  const [shouldRefresh, setShouldRefresh] = useState(false);
+  useEffect(() => {
+    if (shouldRefresh) {
+      window.location.reload();
+      setShouldRefresh(false);
+    }
+  }, [shouldRefresh]);
   const handleProceedToPay = () => {
     // Validate UPI details before proceeding to pay
     if (!upiDetails.selectedUpiApp || !upiDetails.upiId) {
@@ -68,6 +77,9 @@ const UpiPayment = () => {
         amount: amount,
         people: numberOfPeople,
         booking_date: selectedDate,
+        name: name,
+        email: email,
+        phone_no: phone_no,
       }),
     })
       .then((response) => response.json())
@@ -78,8 +90,11 @@ const UpiPayment = () => {
         console.error("Error adding booking:", error);
       });
     setTimeout(() => {
-      history.push(`/payment-success?tour_id=${tourIdFromURL}`);
+      history.push(`/`);
     }, 1000);
+    // setTimeout(() => {
+    //   setShouldRefresh(true);
+    // }, 1000);
   };
 
   return (

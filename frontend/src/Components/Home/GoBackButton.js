@@ -8,7 +8,7 @@ const GoBackButton = ({ onClick, children }) => {
   const [isSmallScreen] = useMediaQuery("(max-width: 400px)");
 
   const handleGoBack = () => {
-    history.push("/");
+    history.goBack();
   };
 
   return (

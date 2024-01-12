@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Button,
   FormControl,
@@ -26,6 +26,9 @@ const CreditCardPayment = () => {
   const amount = searchParams.get("amount");
   const numberOfPeople = searchParams.get("people");
   const selectedDate = searchParams.get("selectedDate");
+  const name = searchParams.get("name");
+  const email = searchParams.get("email");
+  const phone_no = searchParams.get("phone_no");
   const [creditCardDetails, setCreditCardDetails] = useState({
     cardNumber: "",
     expiryDate: "",
@@ -49,7 +52,13 @@ const CreditCardPayment = () => {
       [name]: value,
     });
   };
-
+  const [shouldRefresh, setShouldRefresh] = useState(false);
+  useEffect(() => {
+    if (shouldRefresh) {
+      window.location.reload();
+      setShouldRefresh(false);
+    }
+  }, [shouldRefresh]);
   const handleProceedToPay = () => {
     // Basic validation checks
     if (
@@ -81,6 +90,9 @@ const CreditCardPayment = () => {
         amount: amount,
         people: numberOfPeople,
         booking_date: selectedDate,
+        name: name,
+        email: email,
+        phone_no: phone_no,
       }),
     })
       .then((response) => response.json())
@@ -91,8 +103,11 @@ const CreditCardPayment = () => {
         console.error("Error adding booking:", error);
       });
     setTimeout(() => {
-      history.push(`/payment-success?tour_id=${tourIdFromURL}`);
+      history.push(`/`);
     }, 1000);
+    // setTimeout(() => {
+    //   setShouldRefresh(true);
+    // }, 1000);
   };
 
   return (

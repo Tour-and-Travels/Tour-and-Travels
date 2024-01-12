@@ -18,7 +18,7 @@ const BookingDetails = () => {
   const history = useHistory();
   const location = useLocation();
   const toast = useToast();
-  // Retrieve tour_id from the URL
+
   const searchParams = new URLSearchParams(location.search);
   const tourIdFromURL = searchParams.get("tour_id");
   const [bookingDetails, setBookingDetails] = useState({
@@ -29,36 +29,32 @@ const BookingDetails = () => {
     selectedDate: "",
   });
   const [bookingCompleted, setBookingCompleted] = useState(false);
-  const [tourDetails, setTourDetails] = useState(null); // State to store tour details
+  const [tourDetails, setTourDetails] = useState(null);
   const validateEmail = (email) => {
-    // Basic email validation using a regular expression
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
   };
 
   const isPhoneNumberValid = (phoneNumber) => {
-    // Check if phone number has exactly 10 digits
     return phoneNumber.length === 10;
   };
   useEffect(() => {
-    // Fetch specific tour details when component mounts
     const fetchTourDetails = async () => {
       try {
         const response = await fetch(`/tour/specificread/${tourIdFromURL}`);
         if (response.ok) {
           const data = await response.json();
-          setTourDetails(data.tour); // Set the fetched tour details to state
+          setTourDetails(data.tour);
           console.log(data.tour);
         } else {
           throw new Error("Failed to fetch tour details");
         }
       } catch (error) {
         console.error("Error fetching tour details:", error);
-        // Handle error - display a message or retry logic
       }
     };
 
-    fetchTourDetails(); // Call the function to fetch tour details
+    fetchTourDetails();
   }, [tourIdFromURL]);
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -117,7 +113,9 @@ const BookingDetails = () => {
 
       // Calculate total amount
       const amount = Price * numberOfPeople;
-
+      const name = bookingDetails.name;
+      const email = bookingDetails.email;
+      const phone_no = bookingDetails.phone;
       // Check if the number of people is within the maximum occupancy limit
       if (numberOfPeople > maximum_occupancy) {
         toast({
@@ -129,7 +127,16 @@ const BookingDetails = () => {
         });
         return;
       }
-
+      if (numberOfPeople <= 0) {
+        toast({
+          title: "Error",
+          description: `Number of people should be greater than 0.`,
+          status: "error",
+          duration: 1000,
+          isClosable: true,
+        });
+        return;
+      }
       // Check if the selected date is within the tour date range
       const startDate = new Date(Starting_date);
       const endDate = new Date(Ending_date);
@@ -158,7 +165,7 @@ const BookingDetails = () => {
 
       // history.push('/payment-options');
       history.push(
-        `/payment-options?tour_id=${tourIdFromURL}&amount=${amount}&selectedDate=${selectedDate}&people=${numberOfPeople}`
+        `/payment-options?tour_id=${tourIdFromURL}&amount=${amount}&selectedDate=${selectedDate}&people=${numberOfPeople}&name=${name}&email=${email}&phone_no=${phone_no}`
       );
     }
   };

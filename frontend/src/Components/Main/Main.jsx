@@ -28,9 +28,7 @@ const Main = () => {
   const [shouldRefresh, setShouldRefresh] = useState(false);
   useEffect(() => {
     if (shouldRefresh) {
-      // Refresh the page
       window.location.reload();
-      // Set the state to prevent further refreshes
       setShouldRefresh(false);
     }
   }, [shouldRefresh]);
