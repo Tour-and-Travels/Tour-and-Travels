@@ -9,26 +9,30 @@ const PaymentOptions = () => {
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const tourIdFromURL = searchParams.get("tour_id");
+  const hotelIdFromURL = searchParams.get("hotel_id");
   const amount = searchParams.get("amount");
   const numberOfPeople = searchParams.get("people");
   const selectedDate = searchParams.get("selectedDate");
+  const rooms = searchParams.get("rooms");
   const name = searchParams.get("name");
   const email = searchParams.get("email");
   const phone_no = searchParams.get("phone_no");
+  const checkinDate = searchParams.get("checkinDate");
+  const checkoutDate = searchParams.get("checkoutDate");
   const handlePayment = (method) => {
     console.log(`Payment via ${method}`);
 
     if (method === "debit card") {
       history.push(
-        `/payment/debit-card?tour_id=${tourIdFromURL}&amount=${amount}&selectedDate=${selectedDate}&people=${numberOfPeople}&name=${name}&email=${email}&phone_no=${phone_no}`
+        `/payment/debit-card?tour_id=${tourIdFromURL}&amount=${amount}&selectedDate=${selectedDate}&people=${numberOfPeople}&name=${name}&email=${email}&phone_no=${phone_no}&checkinDate=${checkinDate}&checkoutDate=${checkoutDate}&rooms=${rooms}&hotel_id=${hotelIdFromURL}`
       );
     } else if (method === "credit card") {
       history.push(
-        `/payment/credit-card?tour_id=${tourIdFromURL}&amount=${amount}&selectedDate=${selectedDate}&people=${numberOfPeople}&name=${name}&email=${email}&phone_no=${phone_no}`
+        `/payment/credit-card?tour_id=${tourIdFromURL}&amount=${amount}&selectedDate=${selectedDate}&people=${numberOfPeople}&name=${name}&email=${email}&phone_no=${phone_no}&checkinDate=${checkinDate}&checkoutDate=${checkoutDate}&rooms=${rooms}&hotel_id=${hotelIdFromURL}`
       );
     } else if (method === "UPI") {
       history.push(
-        `/payment/upi?tour_id=${tourIdFromURL}&amount=${amount}&selectedDate=${selectedDate}&people=${numberOfPeople}&name=${name}&email=${email}&phone_no=${phone_no}`
+        `/payment/upi?tour_id=${tourIdFromURL}&amount=${amount}&selectedDate=${selectedDate}&people=${numberOfPeople}&name=${name}&email=${email}&phone_no=${phone_no}&checkinDate=${checkinDate}&checkoutDate=${checkoutDate}&rooms=${rooms}&hotel_id=${hotelIdFromURL}`
       );
     }
   };

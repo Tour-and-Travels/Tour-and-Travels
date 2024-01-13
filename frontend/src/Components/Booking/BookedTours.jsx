@@ -175,7 +175,7 @@ const BookedTours = () => {
         setBookedTours(booking);
 
         if (booking.length > 0) {
-          const firstBooking = booking[0];
+          const firstBooking = booking[cancelBookingId];
           setTourId(firstBooking.tour_id);
         }
       })

@@ -23,12 +23,18 @@ const CreditCardPayment = () => {
 
   const searchParams = new URLSearchParams(location.search);
   const tourIdFromURL = searchParams.get("tour_id");
+  console.log(tourIdFromURL);
+  const hotelIdFromURL = searchParams.get("hotel_id");
+  console.log(hotelIdFromURL);
   const amount = searchParams.get("amount");
   const numberOfPeople = searchParams.get("people");
   const selectedDate = searchParams.get("selectedDate");
+  const rooms = searchParams.get("rooms");
   const name = searchParams.get("name");
   const email = searchParams.get("email");
   const phone_no = searchParams.get("phone_no");
+  const checkinDate = searchParams.get("checkinDate");
+  const checkoutDate = searchParams.get("checkoutDate");
   const [creditCardDetails, setCreditCardDetails] = useState({
     cardNumber: "",
     expiryDate: "",
@@ -79,29 +85,58 @@ const CreditCardPayment = () => {
     // For demonstration purposes, show a success notification
 
     setIsOpen(true);
-    fetch("/booking/add", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        user_id: JSON.parse(localStorage.getItem("userInfo")).user.user_id,
-        tour_id: tourIdFromURL,
-        amount: amount,
-        people: numberOfPeople,
-        booking_date: selectedDate,
-        name: name,
-        email: email,
-        phone_no: phone_no,
-      }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data.message);
+    if (hotelIdFromURL) {
+      console.log(hotelIdFromURL);
+      fetch("/hotelbooking/add", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          user_id: JSON.parse(localStorage.getItem("userInfo")).user.user_id,
+          hotel_id: hotelIdFromURL,
+          amount: amount,
+          rooms: rooms,
+          check_in_date: checkinDate,
+          check_out_date: checkoutDate,
+          name: name,
+          email: email,
+          phone_no: phone_no,
+        }),
       })
-      .catch((error) => {
-        console.error("Error adding booking:", error);
-      });
+        .then((response) => response.json())
+        .then((data) => {
+          console.log(data.message);
+        })
+        .catch((error) => {
+          console.error("Error adding booking:", error);
+        });
+    } else if (tourIdFromURL === null || tourIdFromURL === "null") {
+      console.log(tourIdFromURL);
+      fetch("/booking/add", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          user_id: JSON.parse(localStorage.getItem("userInfo")).user.user_id,
+          tour_id: tourIdFromURL,
+          amount: amount,
+          people: numberOfPeople,
+          booking_date: selectedDate,
+          name: name,
+          email: email,
+          phone_no: phone_no,
+        }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          console.log(data.message);
+        })
+        .catch((error) => {
+          console.error("Error adding booking:", error);
+        });
+    }
     setTimeout(() => {
       history.push(`/`);
     }, 1000);

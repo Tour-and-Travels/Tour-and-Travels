@@ -7,6 +7,7 @@ import auth from "./public/routes/auth.js";
 import hotel from "./public/routes/hotel.js";
 import tour from "./public/routes/tour.js";
 import booking from "./public/routes/booking.js";
+import hotelbooking from "./public/routes/hotelbooking.js";
 
 // import { isAuthenticated } from "./middleware/authMiddleware.js";
 const app = express();
@@ -34,6 +35,7 @@ app.use("/auth", auth);
 app.use("/hotel", hotel);
 app.use("/tour", tour);
 app.use("/booking", booking);
+app.use("/hotelbooking", hotelbooking);
 const port = 5000;
 const server = app.listen(
   port,
