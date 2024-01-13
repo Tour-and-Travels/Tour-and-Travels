@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 12, 2024 at 06:22 PM
+-- Generation Time: Jan 13, 2024 at 05:13 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -66,11 +66,11 @@ CREATE TABLE `booking` (
 
 INSERT INTO `booking` (`booking_id`, `user_id`, `name`, `email`, `phone_no`, `tour_id`, `amount`, `people`, `booking_date`, `booking_status`) VALUES
 (8, 14, 'ankan kr mitra', 'ankankrmitra100@gmail.com', '8017285384', 18, 35000, 5, '2023-12-14', 1),
-(9, 14, 'Ankan', 'ankankrmitra100@gmail.com', '8017285383', 18, 28000, 4, '2023-12-20', 0),
+(9, 14, 'Ankan', 'ankankrmitra100@gmail.com', '8017285383', 18, 28000, 4, '2023-12-20', 1),
 (10, 14, 'Ankan', 'ankankrmitra100@gmail.com', '8017285383', 17, 24000, 4, '2023-12-20', 1),
-(11, 14, 'Ankan', 'ankankrmitra100@gmail.com', '8017285383', 20, 40000, 5, '2023-12-22', 1),
-(12, 14, 'Ankan', 'ankankrmitra100@gmail.com', '8017285383', 19, 35000, 5, '2023-12-21', 1),
-(13, 14, 'Ankan', 'ankankrmitra100@gmail.com', '8017285383', 18, 84000, 12, '2023-12-22', 1);
+(11, 14, 'Ankan Mitra', 'ankankrmitra100@gmail.com', '8017285383', 20, 40000, 5, '2023-12-20', 1),
+(12, 14, 'Ankan Mitra', 'ankankrmitra100@gmail.com', '8017285383', 19, 35000, 5, '2023-12-19', 1),
+(13, 14, 'Ankan', 'ankankrmitra100@gmail.com', '8017285383', 18, 84000, 12, '2023-12-22', 0);
 
 -- --------------------------------------------------------
 
@@ -81,20 +81,51 @@ INSERT INTO `booking` (`booking_id`, `user_id`, `name`, `email`, `phone_no`, `to
 CREATE TABLE `hotel` (
   `hotel_id` int(11) NOT NULL,
   `hotel_name` varchar(32) NOT NULL,
-  `location` varchar(128) NOT NULL
+  `location` varchar(128) NOT NULL,
+  `roomprice` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `hotel`
 --
 
-INSERT INTO `hotel` (`hotel_id`, `hotel_name`, `location`) VALUES
-(24, 'Nature Haven Resort', 'Sundarbans Tiger Reserve, West Bengal'),
-(25, 'Serenity Residency', 'Dashashwamedh Ghat, Varanasi'),
-(26, 'Ocean Breeze Resort', 'Calangute Beach, Goa'),
-(27, 'Mountain View Inn', 'Mall Road, Darjeeling'),
-(28, 'Riverside Retreat', 'Jim Corbett National Park, Uttarakhand'),
-(30, 'Royal Heritage Palace', 'City Palace Road, Jaipur');
+INSERT INTO `hotel` (`hotel_id`, `hotel_name`, `location`, `roomprice`) VALUES
+(24, 'Nature Haven Resort', 'Sundarbans Tiger Reserve, West Bengal', 1000),
+(25, 'Serenity Residency', 'Dashashwamedh Ghat, Varanasi', 2000),
+(26, 'Ocean Breeze Resort', 'Calangute Beach, Goa', 3000),
+(27, 'Mountain View Inn', 'Mall Road, Darjeeling', 4000),
+(28, 'Riverside Retreat', 'Jim Corbett National Park, Uttarakhand', 5000),
+(30, 'Royal Heritage Palace', 'City Palace Road, Jaipur', 6000);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `hotelbooking`
+--
+
+CREATE TABLE `hotelbooking` (
+  `hotelbookingid` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `hotel_id` int(11) NOT NULL,
+  `amount` decimal(10,0) NOT NULL,
+  `check_in_date` date NOT NULL,
+  `check_out_date` date NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `phone_no` varchar(13) NOT NULL,
+  `rooms` int(11) NOT NULL,
+  `booking_status` tinyint(1) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `hotelbooking`
+--
+
+INSERT INTO `hotelbooking` (`hotelbookingid`, `user_id`, `hotel_id`, `amount`, `check_in_date`, `check_out_date`, `name`, `email`, `phone_no`, `rooms`, `booking_status`) VALUES
+(1, 14, 25, 5760, '2023-12-12', '2023-12-20', 'Ankan', 'ankankrmitra100@gmail.com', '8017285383', 3, 1),
+(2, 14, 25, 7680, '2023-12-11', '2023-12-12', 'Ankan', 'ankankrmitra100@gmail.com', '8017285383', 4, 1),
+(3, 14, 25, 7680, '2023-12-11', '2023-12-12', 'Ankan', 'ankankrmitra100@gmail.com', '8017285383', 4, 1),
+(4, 14, 26, 8550, '2023-12-20', '2023-12-22', 'Ankan', 'ankankrmitra100@gmail.com', '8017285383', 3, 1);
 
 -- --------------------------------------------------------
 
@@ -186,6 +217,14 @@ ALTER TABLE `hotel`
   ADD PRIMARY KEY (`hotel_id`);
 
 --
+-- Indexes for table `hotelbooking`
+--
+ALTER TABLE `hotelbooking`
+  ADD PRIMARY KEY (`hotelbookingid`),
+  ADD KEY `hotelbooking_ibfk_1` (`hotel_id`),
+  ADD KEY `hotelbooking_ibfk_2` (`user_id`);
+
+--
 -- Indexes for table `tour`
 --
 ALTER TABLE `tour`
@@ -212,13 +251,19 @@ ALTER TABLE `admin`
 -- AUTO_INCREMENT for table `booking`
 --
 ALTER TABLE `booking`
-  MODIFY `booking_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `booking_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
 
 --
 -- AUTO_INCREMENT for table `hotel`
 --
 ALTER TABLE `hotel`
   MODIFY `hotel_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
+
+--
+-- AUTO_INCREMENT for table `hotelbooking`
+--
+ALTER TABLE `hotelbooking`
+  MODIFY `hotelbookingid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `tour`
@@ -235,6 +280,13 @@ ALTER TABLE `user`
 --
 -- Constraints for dumped tables
 --
+
+--
+-- Constraints for table `hotelbooking`
+--
+ALTER TABLE `hotelbooking`
+  ADD CONSTRAINT `hotelbooking_ibfk_1` FOREIGN KEY (`hotel_id`) REFERENCES `hotel` (`hotel_id`),
+  ADD CONSTRAINT `hotelbooking_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`);
 
 --
 -- Constraints for table `tour`
