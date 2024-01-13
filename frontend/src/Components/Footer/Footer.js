@@ -1,8 +1,16 @@
 import React from "react";
 import "./Footer.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEnvelope, faGlobe } from "@fortawesome/free-solid-svg-icons";
+import {
+  faEnvelope,
+  faGlobe,
+  faHouse,
+  faPlane,
+  faMap,
+  faSuitcase,
+} from "@fortawesome/free-solid-svg-icons";
 import { faGithub } from "@fortawesome/free-brands-svg-icons";
+
 const Footer = () => {
   return (
     <footer className="footer" id="about">
@@ -23,20 +31,24 @@ const Footer = () => {
       <div className="links-section">
         <ul>
           <li>
-            <a href="/">Home</a>
+            <FontAwesomeIcon icon={faHouse} />
+            <a href="/"> Home</a>
           </li>
           <li>
-            <a href="/Flight">Flight</a>
+            <FontAwesomeIcon icon={faPlane} />
+            <a href="/Flight"> Flight</a>
           </li>
           <li>
-            <a href="/tour">Tour</a>
+            <FontAwesomeIcon icon={faMap} />
+            <a href="/tour"> Tour</a>
           </li>
           <li>
-            <a href="/packages">Packages</a>
+            <FontAwesomeIcon icon={faSuitcase} />
+            <a href="/packages"> Packages</a>
           </li>
         </ul>
         <div className="contact">
-          <a href="mailto:ankankrmitra100@gmail.com">
+          <a href="mailto:varunsingh04092001@gmail.com">
             Mail&nbsp;&nbsp;
             <FontAwesomeIcon icon={faEnvelope} />
           </a>
@@ -49,7 +61,6 @@ const Footer = () => {
             >
               Source code&nbsp;
               <FontAwesomeIcon icon={faGithub} />
-              {/* <AiOutlineGithub style={{ verticalAlign: "middle" }} /> */}
             </a>
           </div>
         </div>

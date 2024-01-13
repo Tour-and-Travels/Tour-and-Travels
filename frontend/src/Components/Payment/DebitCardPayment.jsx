@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Button,
   FormControl,
@@ -14,7 +14,7 @@ import {
   AlertDialogOverlay,
 } from "@chakra-ui/react";
 import { useHistory } from "react-router-dom";
-import { useLocation } from "react-router-dom/cjs/react-router-dom.min";
+import { useLocation } from "react-router-dom";
 
 const DebitCardPayment = () => {
   const [isSmallScreen] = useMediaQuery("(max-width: 400px)");
@@ -23,9 +23,16 @@ const DebitCardPayment = () => {
 
   const searchParams = new URLSearchParams(location.search);
   const tourIdFromURL = searchParams.get("tour_id");
+  const hotelIdFromURL = searchParams.get("hotel_id");
   const amount = searchParams.get("amount");
   const numberOfPeople = searchParams.get("people");
   const selectedDate = searchParams.get("selectedDate");
+  const rooms = searchParams.get("rooms");
+  const name = searchParams.get("name");
+  const email = searchParams.get("email");
+  const phone_no = searchParams.get("phone_no");
+  const checkinDate = searchParams.get("checkinDate");
+  const checkoutDate = searchParams.get("checkoutDate");
   const [debitCardDetails, setDebitCardDetails] = useState({
     cardNumber: "",
     expiryDate: "",
@@ -49,7 +56,13 @@ const DebitCardPayment = () => {
       [name]: value,
     });
   };
-
+  const [shouldRefresh, setShouldRefresh] = useState(false);
+  useEffect(() => {
+    if (shouldRefresh) {
+      window.location.reload();
+      setShouldRefresh(false);
+    }
+  }, [shouldRefresh]);
   const handleProceedToPay = () => {
     // Basic validation checks
     if (
@@ -69,28 +82,60 @@ const DebitCardPayment = () => {
 
     // For demonstration purposes, show a success notification
     setIsOpen(true);
-    fetch("/booking/add", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        user_id: JSON.parse(localStorage.getItem("userInfo")).user.user_id,
-        tour_id: tourIdFromURL,
-        amount: amount,
-        people: numberOfPeople,
-        booking_date: selectedDate,
-      }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data.message);
+    if (hotelIdFromURL) {
+      console.log(hotelIdFromURL);
+      fetch("/hotelbooking/add", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          user_id: JSON.parse(localStorage.getItem("userInfo")).user.user_id,
+          hotel_id: hotelIdFromURL,
+          amount: amount,
+          rooms: rooms,
+          check_in_date: checkinDate,
+          check_out_date: checkoutDate,
+          name: name,
+          email: email,
+          phone_no: phone_no,
+        }),
       })
-      .catch((error) => {
-        console.error("Error adding booking:", error);
-      });
+        .then((response) => response.json())
+        .then((data) => {
+          console.log(data.message);
+        })
+        .catch((error) => {
+          console.error("Error adding booking:", error);
+        });
+    } else if (tourIdFromURL === null || tourIdFromURL === "null") {
+      console.log(tourIdFromURL);
+      fetch("/booking/add", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          user_id: JSON.parse(localStorage.getItem("userInfo")).user.user_id,
+          tour_id: tourIdFromURL,
+          amount: amount,
+          people: numberOfPeople,
+          booking_date: selectedDate,
+          name: name,
+          email: email,
+          phone_no: phone_no,
+        }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          console.log(data.message);
+        })
+        .catch((error) => {
+          console.error("Error adding booking:", error);
+        });
+    }
     setTimeout(() => {
-      history.push(`/payment-success?tour_id=${tourIdFromURL}`);
+      history.push(`/`);
     }, 1000);
   };
 

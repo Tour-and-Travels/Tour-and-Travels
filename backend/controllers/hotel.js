@@ -56,5 +56,19 @@ const hoteldelete = (req, res) => {
     }
   });
 };
-
-export { hoteladd, hotelread, hotelupdate, hoteldelete };
+const specifichotelread = (req, res) => {
+  const hotel_id = req.params.id;
+  const SELECT_SINGLE_HOTEL_QUERY = `SELECT * FROM hotel WHERE hotel_id = ?`;
+  db.query(SELECT_SINGLE_HOTEL_QUERY, [hotel_id], (error, results) => {
+    if (error) {
+      res.status(500).send({ message: "Error fetching tour details", error });
+    } else {
+      if (results.length == 0) {
+        res.status(404).send({ message: "Hotel not found" });
+      } else {
+        res.status(200).json({ hotels: results[0] });
+      }
+    }
+  });
+};
+export { hoteladd, hotelread, hotelupdate, hoteldelete, specifichotelread };

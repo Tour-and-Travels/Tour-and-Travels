@@ -76,6 +76,9 @@ const Navbar = () => {
               <Link to="/profile">My Profile</Link>
             </li>
           )}
+          <li>
+            <Link to="/hotel">View Hotels</Link>
+          </li>
         </ul>
         <div className="toggle-button" onClick={toggleMenu}>
           <span></span>

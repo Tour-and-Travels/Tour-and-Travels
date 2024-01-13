@@ -13,49 +13,66 @@ import { useHistory } from "react-router-dom";
 import PaymentPage from "../Payment/PaymentPage";
 import { useLocation } from "react-router-dom";
 
-const BookingDetails = () => {
+const HotelBookingDetails = () => {
   const [isSmallScreen] = useMediaQuery("(max-width: 400px)");
   const history = useHistory();
   const location = useLocation();
   const toast = useToast();
 
+  // Retrieve hotel_id from the URL
   const searchParams = new URLSearchParams(location.search);
-  const tourIdFromURL = searchParams.get("tour_id");
+  const hotelIdFromURL = searchParams.get("hotel_id");
   const [bookingDetails, setBookingDetails] = useState({
     name: "",
     email: "",
     phone: "",
-    numberOfPeople: "",
-    selectedDate: "",
+    discount: "",
+    numberOfRooms: "",
+    checkinDate: "",
+    checkoutDate: "",
   });
+  const [amount, setAmount] = useState();
   const [bookingCompleted, setBookingCompleted] = useState(false);
-  const [tourDetails, setTourDetails] = useState(null);
+  const [hotelDetails, sethotelDetails] = useState(null); // State to store hotel details
   const validateEmail = (email) => {
+    // Basic email validation using a regular expression
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
   };
 
   const isPhoneNumberValid = (phoneNumber) => {
+    // Check if phone number has exactly 10 digits
     return phoneNumber.length === 10;
   };
   useEffect(() => {
-    const fetchTourDetails = async () => {
+    // Fetch specific hotel details when component mounts
+    const fetchhotelDetails = async () => {
       try {
-        const response = await fetch(`/tour/specificread/${tourIdFromURL}`);
+        const response = await fetch(`/hotel/specificread/${hotelIdFromURL}`);
         if (response.ok) {
           const data = await response.json();
-          setTourDetails(data.tour);
-          console.log(data.tour);
+          sethotelDetails(data.hotels); // Set the fetched hotel details to state
+          console.log(data.hotels);
         } else {
-          throw new Error("Failed to fetch tour details");
+          throw new Error("Failed to fetch hotel details");
         }
       } catch (error) {
-        console.error("Error fetching tour details:", error);
+        console.error("Error fetching hotel details:", error);
+        // Handle error - display a message or retry logic
       }
     };
 
-    fetchTourDetails();
-  }, [tourIdFromURL]);
+    fetchhotelDetails(); // Call the function to fetch hotel details
+  }, [hotelIdFromURL]);
+  useEffect(() => {
+    // This effect will run whenever amount changes
+    if (bookingCompleted && amount !== undefined) {
+      history.push(
+        `/payment-options?hotel_id=${hotelIdFromURL}&amount=${amount}&checkinDate=${bookingDetails.checkinDate}&checkoutDate=${bookingDetails.checkoutDate}&rooms=${bookingDetails.numberOfRooms}&name=${bookingDetails.name}&email=${bookingDetails.email}&phone_no=${bookingDetails.phone}`
+      );
+    }
+  }, [bookingCompleted, amount, hotelIdFromURL, bookingDetails, history]);
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setBookingDetails({
@@ -69,8 +86,9 @@ const BookingDetails = () => {
       !bookingDetails.name ||
       !bookingDetails.email ||
       !bookingDetails.phone ||
-      !bookingDetails.numberOfPeople ||
-      !bookingDetails.selectedDate
+      !bookingDetails.numberOfRooms ||
+      !bookingDetails.checkinDate ||
+      !bookingDetails.checkoutDate
     ) {
       toast({
         title: "Error",
@@ -102,70 +120,67 @@ const BookingDetails = () => {
       });
       return;
     }
-    if (tourDetails) {
-      const { Price, maximum_occupancy, Starting_date, Ending_date } =
-        tourDetails;
-
-      const numberOfPeople = parseInt(bookingDetails.numberOfPeople);
-      const selectedDate = new Date(bookingDetails.selectedDate)
+    if (hotelDetails) {
+      const { roomprice } = hotelDetails;
+      console.log(hotelDetails);
+      const numberofRooms = parseInt(bookingDetails.numberOfRooms);
+      const checkinDate = new Date(bookingDetails.checkinDate)
         .toISOString()
         .split("T")[0];
-
-      // Calculate total amount
-      const amount = Price * numberOfPeople;
-      const name = bookingDetails.name;
-      const email = bookingDetails.email;
-      const phone_no = bookingDetails.phone;
-      // Check if the number of people is within the maximum occupancy limit
-      if (numberOfPeople > maximum_occupancy) {
+      const checkoutDate = new Date(bookingDetails.checkoutDate)
+        .toISOString()
+        .split("T")[0];
+      const numberOfDays = Math.floor(
+        (checkoutDate - checkinDate) / (1000 * 60 * 60 * 24)
+      );
+      const discount = parseFloat(bookingDetails.discount);
+      if (checkinDate > checkoutDate) {
         toast({
           title: "Error",
-          description: `Number of people exceeds maximum occupancy (${maximum_occupancy}).`,
+          description: `check-in date should be less than or equal to check-out date`,
           status: "error",
           duration: 1000,
           isClosable: true,
         });
         return;
       }
-      if (numberOfPeople <= 0) {
+      let calculatedAmount;
+      if (discount) {
+        calculatedAmount =
+          numberofRooms * roomprice -
+          (discount * numberofRooms * roomprice) / 100;
+        console.log(calculatedAmount);
+      } else {
+        calculatedAmount = numberofRooms * roomprice;
+        console.log(calculatedAmount);
+      }
+      console.log(calculatedAmount);
+      if (discount > 5) {
         toast({
           title: "Error",
-          description: `Number of people should be greater than 0.`,
-          status: "error",
+          description: `discount percentage will be within 5%.`,
+          status: "warning",
           duration: 1000,
           isClosable: true,
         });
-        return;
       }
-      // Check if the selected date is within the tour date range
-      const startDate = new Date(Starting_date);
-      const endDate = new Date(Ending_date);
-      if (selectedDate < startDate || selectedDate > endDate) {
-        toast({
-          title: "Error",
-          description: "Selected date is not within the tour date range.",
-          status: "error",
-          duration: 1000,
-          isClosable: true,
-        });
-        return;
-      }
-
+      setAmount(calculatedAmount);
       console.log("Booking Details submitted:", bookingDetails);
 
       setBookingDetails({
         name: "",
         email: "",
         phone: "",
-        numberOfPeople: "",
-        selectedDate: "",
+        numberOfRooms: "",
+        chekinDate: "",
+        checkoutDate: "",
       });
 
       setBookingCompleted(true);
 
       // history.push('/payment-options');
       history.push(
-        `/payment-options?tour_id=${tourIdFromURL}&amount=${amount}&selectedDate=${selectedDate}&people=${numberOfPeople}&name=${name}&email=${email}&phone_no=${phone_no}`
+        `/payment-options?hotel_id=${hotelIdFromURL}&amount=${calculatedAmount}&checkinDate=${checkinDate}&checkoutDate=${checkoutDate}&rooms=${numberofRooms}&name=${bookingDetails.name}&email=${bookingDetails.email}&phone_no=${bookingDetails.phone}`
       );
     }
   };
@@ -204,27 +219,44 @@ const BookingDetails = () => {
         />
       </FormControl>
 
-      <FormControl id="numberOfPeople" isRequired mb="3">
-        <FormLabel>Number of People</FormLabel>
+      <FormControl id="numberOfRooms" isRequired mb="3">
+        <FormLabel>Number of Rooms</FormLabel>
         <Input
           type="number"
           placeholder="Enter Number of People"
-          name="numberOfPeople"
-          value={bookingDetails.numberOfPeople}
+          name="numberOfRooms"
+          value={bookingDetails.numberOfRooms}
           onChange={handleInputChange}
         />
       </FormControl>
 
-      <FormControl id="selectedDate" isRequired mb="3">
-        <FormLabel>Select Date</FormLabel>
+      <FormControl id="checkinDate" isRequired mb="3">
+        <FormLabel>Check-in date</FormLabel>
         <Input
           type="date"
-          name="selectedDate"
-          value={bookingDetails.selectedDate}
+          name="checkinDate"
+          value={bookingDetails.checkinDate}
           onChange={handleInputChange}
         />
       </FormControl>
-
+      <FormControl id="checkoutDate" isRequired mb="3">
+        <FormLabel>Check-out date</FormLabel>
+        <Input
+          type="date"
+          name="checkoutDate"
+          value={bookingDetails.checkoutDate}
+          onChange={handleInputChange}
+        />
+      </FormControl>
+      <FormControl id="discount" mb="3">
+        <FormLabel>Enter discount percentage you want</FormLabel>
+        <Input
+          type="number"
+          name="discount"
+          value={bookingDetails.discount}
+          onChange={handleInputChange}
+        />
+      </FormControl>
       <Button
         bg="black"
         color="white"
@@ -243,4 +275,4 @@ const BookingDetails = () => {
   );
 };
 
-export default BookingDetails;
+export default HotelBookingDetails;
