@@ -85,8 +85,7 @@ const UpdateBooking = () => {
         phone_no,
         numOfPeople,
         booking_date,
-        amount, // Update the amount to newAmount
-        // ... (other form data)
+        amount, 
       };
 
       const { data } = await axios.put(

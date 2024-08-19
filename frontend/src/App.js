@@ -16,6 +16,7 @@ import { useLocation } from "react-router-dom";
 import Footer from "./Components/Footer/Footer.js";
 import Hoteldetails from "./Components/hotelbooking/Hoteldetails.js";
 import HotelBookingPage from "./Components/hotelbooking/HotelBookingPage.jsx";
+import UpdateBookingPage from "./Components/Booking/UpdateBookingPage.js";
 const App = () => {
   const location = useLocation();
   const showNavbarRoutes = ["/", "/login", "/booked-tours", "/profile"];
@@ -34,6 +35,7 @@ const App = () => {
         <Route path="/booked-tours" component={BookedTours} />
         <Route path="/profile" component={ProfilePage} />
         <Route path="/hotel" component={Hoteldetails} />
+        <Route path="/update-booking" component={UpdateBookingPage} />
         <Route path="/">
           <Home />
           <Main />
