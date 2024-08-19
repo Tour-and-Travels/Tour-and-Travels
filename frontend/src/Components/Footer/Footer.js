@@ -22,7 +22,7 @@ const Footer = () => {
           <FontAwesomeIcon icon={faGlobe} className="globe" />
           Trip-Trekker is a software engineering project in the field of tour
           and travels developed by our team. Our team members include Ankan
-          Kumar Mitra, Varun Singh, Arkadipta Paul and Anuj Kumar Yadav. The
+          Kumar Mitra, Varun Singh and Anuj Kumar Yadav. The
           project is built using React and Node.js offering features such as
           tour booking.
         </p>

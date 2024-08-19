@@ -70,33 +70,7 @@ const UpiPayment = () => {
 
     // For demonstration purposes, redirect to a success page
     setIsOpen(true);
-    if (hotelIdFromURL) {
-      console.log(hotelIdFromURL);
-      fetch("/hotelbooking/add", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          user_id: JSON.parse(localStorage.getItem("userInfo")).user.user_id,
-          hotel_id: hotelIdFromURL,
-          amount: amount,
-          rooms: rooms,
-          check_in_date: checkinDate,
-          check_out_date: checkoutDate,
-          name: name,
-          email: email,
-          phone_no: phone_no,
-        }),
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          console.log(data.message);
-        })
-        .catch((error) => {
-          console.error("Error adding booking:", error);
-        });
-    } else if (tourIdFromURL === null || tourIdFromURL === "null") {
+   if(tourIdFromURL){
       console.log(tourIdFromURL);
       fetch("/booking/add", {
         method: "POST",

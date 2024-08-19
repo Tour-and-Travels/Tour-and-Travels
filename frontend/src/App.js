@@ -17,13 +17,15 @@ import Footer from "./Components/Footer/Footer.js";
 import Hoteldetails from "./Components/hotelbooking/Hoteldetails.js";
 import HotelBookingPage from "./Components/hotelbooking/HotelBookingPage.jsx";
 import UpdateBookingPage from "./Components/Booking/UpdateBookingPage.js";
+import { useState } from "react";
 const App = () => {
   const location = useLocation();
+  const [searchQuery, setSearchQuery] = useState("");
   const showNavbarRoutes = ["/", "/login", "/booked-tours", "/profile"];
   const shouldShowNavbar = showNavbarRoutes.includes(location.pathname);
   return (
     <Router>
-      {shouldShowNavbar && <Navbar />}
+      {shouldShowNavbar && <Navbar onSearch={(query) => setSearchQuery(query)}/>}
       <Switch>
         <Route path="/login" component={LoginPage} />
         <Route path="/booking-details" component={BookingPage} />
@@ -38,7 +40,7 @@ const App = () => {
         <Route path="/update-booking" component={UpdateBookingPage} />
         <Route path="/">
           <Home />
-          <Main />
+          <Main searchQuery={searchQuery} />
           <Footer />
         </Route>
       </Switch>
