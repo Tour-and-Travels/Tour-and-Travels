@@ -109,6 +109,7 @@ const DebitCardPayment = () => {
         });
     }
     setTimeout(() => {
+      setShouldRefresh(true);
       history.push(`/`);
     }, 1000);
   };
@@ -194,7 +195,7 @@ const DebitCardPayment = () => {
               Payment Successful
             </AlertDialogHeader>
 
-            <AlertDialogBody>Thank you for your payment!</AlertDialogBody>
+            <AlertDialogBody>Thank you for your payment. Please check your mail for the recipt</AlertDialogBody>
 
             <AlertDialogFooter>
               <Button colorScheme="green" onClick={onClose} ml={3}>

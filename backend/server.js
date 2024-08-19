@@ -1,3 +1,4 @@
+import dotenv from "dotenv";
 import express from "express";
 import colors from "colors";
 import mysql from "mysql";
@@ -10,6 +11,7 @@ import booking from "./public/routes/booking.js";
 import hotelbooking from "./public/routes/hotelbooking.js";
 
 // import { isAuthenticated } from "./middleware/authMiddleware.js";
+dotenv.config();
 const app = express();
 const db = mysql.createConnection({
   host: "localhost",

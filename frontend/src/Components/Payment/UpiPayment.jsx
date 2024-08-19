@@ -97,6 +97,7 @@ const UpiPayment = () => {
         });
     }
     setTimeout(() => {
+      setShouldRefresh(true);
       history.push(`/`);
     }, 1000);
   };

@@ -112,11 +112,9 @@ const CreditCardPayment = () => {
         });
     }
     setTimeout(() => {
+      setShouldRefresh(true);
       history.push(`/`);
     }, 1000);
-    // setTimeout(() => {
-    //   setShouldRefresh(true);
-    // }, 1000);
   };
 
   return (
