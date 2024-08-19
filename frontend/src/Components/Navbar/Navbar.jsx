@@ -32,6 +32,11 @@ const Navbar = ({ onSearch }) => {
     }
   };
 
+  const handleAboutClick = () => {
+    history.push("/"); // Navigate to home page
+    setTimeout(scrollToAbout, 500); // Scroll to about section after navigation
+  };
+
   const [isSmallScreen] = useMediaQuery("(max-width: 800px)");
 
   const handleSearchChange = (event) => {
@@ -81,7 +86,7 @@ const Navbar = ({ onSearch }) => {
             </li>
           )}
           <li>
-            <button className="button" onClick={scrollToAbout}>
+            <button className="button" onClick={handleAboutClick}>
               About
             </button>
           </li>
