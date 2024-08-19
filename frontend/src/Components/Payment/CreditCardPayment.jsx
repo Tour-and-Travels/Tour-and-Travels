@@ -85,9 +85,8 @@ const CreditCardPayment = () => {
     // For demonstration purposes, show a success notification
 
     setIsOpen(true);
-   
+    if(tourIdFromURL){
       console.log(tourIdFromURL);
-      if(tourIdFromURL){
       fetch("/booking/add", {
         method: "POST",
         headers: {
@@ -202,7 +201,7 @@ const CreditCardPayment = () => {
               Payment Successful
             </AlertDialogHeader>
 
-            <AlertDialogBody>Thank you for your payment. Please check your mail for the receipt.</AlertDialogBody>
+            <AlertDialogBody>Thank you for your payment!</AlertDialogBody>
 
             <AlertDialogFooter>
               <Button colorScheme="green" onClick={onClose} ml={3}>

@@ -70,8 +70,8 @@ const UpiPayment = () => {
 
     // For demonstration purposes, redirect to a success page
     setIsOpen(true);
+   if(tourIdFromURL){
       console.log(tourIdFromURL);
-      if(tourIdFromURL){
       fetch("/booking/add", {
         method: "POST",
         headers: {
@@ -164,7 +164,7 @@ const UpiPayment = () => {
               Payment Successful
             </AlertDialogHeader>
 
-            <AlertDialogBody>Thank you for your payment. Please check your mail for the recipt</AlertDialogBody>
+            <AlertDialogBody>Thank you for your payment!</AlertDialogBody>
 
             <AlertDialogFooter>
               <Button ref={cancelRef} onClick={onClose}>

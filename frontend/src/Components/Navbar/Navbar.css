@@ -4,6 +4,7 @@ ul {
   padding: 0;
   list-style: none;
 }
+
 .navbar {
   background-color: #333;
   color: #fff;
@@ -36,16 +37,48 @@ ul {
   color: #fff;
   text-decoration: none;
 }
+
 .nav-links a:hover,
 .nav-links a:focus {
   color: #333;
   background-color: white;
 }
+
 .button:hover,
 .button:focus {
   color: #333;
   background-color: white;
 }
+
+.search-container {
+  display: flex;
+  align-items: center;
+  background-color: #f3eeee;
+  padding: 5px 10px;
+  border-radius: 20px;
+}
+
+.search-input {
+  background-color: #f4f1f1;
+  border: none;
+  outline: none;
+  color: rgb(9, 8, 8);
+  padding: 5px 10px;
+  border-radius: 20px;
+  width: 200px;
+  font-size: 1rem;
+}
+
+.search-input::placeholder {
+  color: #aaa;
+}
+
+.search-icon {
+  color: rgb(15, 14, 14);
+  margin-left: 5px;
+  font-size: 1.2rem;
+}
+
 .toggle-button {
   display: none;
   flex-direction: column;
