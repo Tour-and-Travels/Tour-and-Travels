@@ -172,33 +172,34 @@ const BookedTours = () => {
       .then((response) => response.json())
       .then((data) => {
         const booking = data.booking;
+        console.log(booking);
         setBookedTours(booking);
-
         if (booking.length > 0) {
-          const firstBooking = booking[cancelBookingId];
+          const firstBooking = booking[0];
           setTourId(firstBooking.tour_id);
         }
       })
       .catch((error) => console.error("Error fetching booked tours:", error));
   };
 
-  const fetchTourDetails = async () => {
-    try {
-      const response = await fetch(`/tour/specificread/${tourId}`);
-      if (response.ok) {
-        const data = await response.json();
-        setTourDetails(data.tour);
-        setPrice(data.tour.Price);
-        console.log(data.tour);
-        console.log(data.tour.Price);
-      } else {
-        throw new Error("Failed to fetch tour details");
-      }
-    } catch (error) {
-      console.error("Error fetching tour details:", error);
-      // Handle error
-    }
-  };
+  // const fetchTourDetails = async () => {
+  //   try {
+  //     const response = await fetch(`/tour/specificread/${tourId}`);
+  //     if (response.ok) {
+  //       const data = await response.json();
+  //       console.log(data);
+  //       setTourDetails(data.tour);
+  //       setPrice(data.tour.Price);
+  //       console.log(data.tour);
+  //       console.log(data.tour.Price);
+  //     } else {
+  //       throw new Error("Failed to fetch tour details");
+  //     }
+  //   } catch (error) {
+  //     console.error("Error fetching tour details:", error);
+  //     // Handle error
+  //   }
+  // };
   const [shouldRefresh, setShouldRefresh] = useState(false);
   useEffect(() => {
     if (shouldRefresh) {
@@ -231,18 +232,18 @@ const BookedTours = () => {
       }
     };
     fetchData();
-  }, [user]);
+  }, []);
 
-  useEffect(() => {
-    const fetchTourData = async () => {
-      if (tourId) {
-        await fetchTourDetails(tourId);
-      } else {
-        console.error("Tour information not available");
-      }
-    };
-    fetchTourData();
-  }, [tourId]);
+  // useEffect(() => {
+  //   const fetchTourData = async () => {
+  //     if (tourId) {
+  //       await fetchTourDetails(tourId);
+  //     } else {
+  //       console.error("Tour information not available");
+  //     }
+  //   };
+  //   fetchTourData();
+  // }, [tourId]);
 
   const handleCancelBooking = (bookingId, tourId) => {
     setTourId(tourId);
