@@ -85,34 +85,9 @@ const CreditCardPayment = () => {
     // For demonstration purposes, show a success notification
 
     setIsOpen(true);
-    if (hotelIdFromURL) {
-      console.log(hotelIdFromURL);
-      fetch("/hotelbooking/add", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          user_id: JSON.parse(localStorage.getItem("userInfo")).user.user_id,
-          hotel_id: hotelIdFromURL,
-          amount: amount,
-          rooms: rooms,
-          check_in_date: checkinDate,
-          check_out_date: checkoutDate,
-          name: name,
-          email: email,
-          phone_no: phone_no,
-        }),
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          console.log(data.message);
-        })
-        .catch((error) => {
-          console.error("Error adding booking:", error);
-        });
-    } else if (tourIdFromURL === null || tourIdFromURL === "null") {
+   
       console.log(tourIdFromURL);
+      if(tourIdFromURL){
       fetch("/booking/add", {
         method: "POST",
         headers: {
@@ -138,11 +113,9 @@ const CreditCardPayment = () => {
         });
     }
     setTimeout(() => {
+      setShouldRefresh(true);
       history.push(`/`);
     }, 1000);
-    // setTimeout(() => {
-    //   setShouldRefresh(true);
-    // }, 1000);
   };
 
   return (
@@ -229,7 +202,7 @@ const CreditCardPayment = () => {
               Payment Successful
             </AlertDialogHeader>
 
-            <AlertDialogBody>Thank you for your payment!</AlertDialogBody>
+            <AlertDialogBody>Thank you for your payment. Please check your mail for the receipt.</AlertDialogBody>
 
             <AlertDialogFooter>
               <Button colorScheme="green" onClick={onClose} ml={3}>

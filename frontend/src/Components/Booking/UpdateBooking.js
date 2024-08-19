@@ -95,7 +95,7 @@ const UpdateBooking = () => {
       );
 
       toast({
-        title: "Booking updated successfully",
+        title: "Booking updated successfully. Please check your mail for the receipt",
         status: "success",
         duration: 3000,
         isClosable: true,
